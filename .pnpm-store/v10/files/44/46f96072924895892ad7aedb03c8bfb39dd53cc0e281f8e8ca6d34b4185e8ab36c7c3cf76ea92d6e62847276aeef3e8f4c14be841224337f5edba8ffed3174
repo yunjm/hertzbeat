@@ -1,0 +1,49 @@
+import { macosSymbolLayerKeys } from './macos-symbol-layer';
+const normalizedHotkeyBrand = Symbol('normalizedHotkey');
+const syntheticKeyNames = {
+    ' ': 'Space',
+    '+': 'Plus'
+};
+export function eventToHotkeyString(event, platform = navigator.platform) {
+    var _a, _b;
+    const { ctrlKey, altKey, metaKey, key } = event;
+    const hotkeyString = [];
+    const modifiers = [ctrlKey, altKey, metaKey, showShift(event)];
+    for (const [i, mod] of modifiers.entries()) {
+        if (mod)
+            hotkeyString.push(modifierKeyNames[i]);
+    }
+    if (!modifierKeyNames.includes(key)) {
+        const nonOptionPlaneKey = hotkeyString.includes('Alt') && matchApplePlatform.test(platform) ? (_a = macosSymbolLayerKeys[key]) !== null && _a !== void 0 ? _a : key : key;
+        const syntheticKey = (_b = syntheticKeyNames[nonOptionPlaneKey]) !== null && _b !== void 0 ? _b : nonOptionPlaneKey;
+        hotkeyString.push(syntheticKey);
+    }
+    return hotkeyString.join('+');
+}
+const modifierKeyNames = ['Control', 'Alt', 'Meta', 'Shift'];
+function showShift(event) {
+    const { shiftKey, code, key } = event;
+    return shiftKey && !(code.startsWith('Key') && key.toUpperCase() === key);
+}
+export function normalizeHotkey(hotkey, platform) {
+    let result;
+    result = localizeMod(hotkey, platform);
+    result = sortModifiers(result);
+    return result;
+}
+const matchApplePlatform = /Mac|iPod|iPhone|iPad/i;
+function localizeMod(hotkey, platform = navigator.platform) {
+    const localModifier = matchApplePlatform.test(platform) ? 'Meta' : 'Control';
+    return hotkey.replace('Mod', localModifier);
+}
+function sortModifiers(hotkey) {
+    const key = hotkey.split('+').pop();
+    const modifiers = [];
+    for (const modifier of ['Control', 'Alt', 'Meta', 'Shift']) {
+        if (hotkey.includes(modifier)) {
+            modifiers.push(modifier);
+        }
+    }
+    modifiers.push(key);
+    return modifiers.join('+');
+}

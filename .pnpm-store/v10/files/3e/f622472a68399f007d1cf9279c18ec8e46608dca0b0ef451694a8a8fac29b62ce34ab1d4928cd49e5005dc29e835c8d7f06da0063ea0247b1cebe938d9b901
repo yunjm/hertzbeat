@@ -1,0 +1,33 @@
+import { AfterViewInit, ChangeDetectorRef, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
+import { InViewportService } from '../services';
+import { Config } from '../values';
+import { DestroyableDirective } from './destroyable.directive';
+import * as i0 from "@angular/core";
+import * as i1 from "./destroyable.directive";
+export declare const InViewportMetadata: unique symbol;
+export interface InViewportAction {
+    [InViewportMetadata]: {
+        entry?: IntersectionObserverEntry;
+    };
+    target: HTMLElement | SVGElement | Element;
+    visible: boolean;
+}
+export type InViewportOptions = Partial<ConstructorParameters<typeof Config>[0]>;
+export declare class InViewportDirective implements AfterViewInit, OnDestroy {
+    set options(options: InViewportOptions);
+    readonly inViewportAction: EventEmitter<InViewportAction>;
+    readonly inViewportCustomCheck: EventEmitter<any>;
+    private config;
+    protected readonly platformId: string;
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected readonly elementRef: ElementRef<Element>;
+    protected readonly destroyable: DestroyableDirective;
+    protected readonly inViewportService: InViewportService;
+    private get nativeElement();
+    ngAfterViewInit(): void;
+    ngOnDestroy(): void;
+    private isVisible;
+    private emit;
+    static ɵfac: i0.ɵɵFactoryDeclaration<InViewportDirective, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<InViewportDirective, "[inViewport]", never, { "options": { "alias": "inViewportOptions"; "required": false; }; }, { "inViewportAction": "inViewportAction"; "inViewportCustomCheck": "inViewportCustomCheck"; }, never, never, true, [{ directive: typeof i1.DestroyableDirective; inputs: {}; outputs: {}; }]>;
+}

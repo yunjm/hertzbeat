@@ -1,0 +1,5 @@
+export declare class Partial {
+    #private;
+    get value(): boolean;
+    constructor(value: boolean | null | undefined);
+}

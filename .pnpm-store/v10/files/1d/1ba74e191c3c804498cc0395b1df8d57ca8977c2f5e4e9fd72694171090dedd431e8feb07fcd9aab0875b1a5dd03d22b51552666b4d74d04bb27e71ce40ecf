@@ -1,0 +1,2 @@
+export * from './lib/tag-cloud.interfaces';
+export * from './lib/tag-cloud.component';

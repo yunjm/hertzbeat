@@ -1,0 +1,252 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateTheme = void 0;
+const less_1 = __importDefault(require("less"));
+const path_1 = require("path");
+const fs_1 = require("fs");
+const postcss_1 = __importDefault(require("postcss"));
+const utils_1 = require("./utils");
+const lessToJs = require('less-vars-to-js');
+const syntax = require('postcss-less');
+const root = process.cwd();
+let nodeModulesPath = '';
+function buildLess(content, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = Object.assign({ javascriptEnabled: true, paths: ['node_modules/'] }, config.buildLessOptions);
+        if (config.debug)
+            console.log(options);
+        const res = yield less_1.default.render(content, options);
+        return res.css;
+    });
+}
+function combineLess(filePath, config) {
+    if (!(0, fs_1.existsSync)(filePath)) {
+        return '';
+    }
+    const fileContent = (0, fs_1.readFileSync)(filePath).toString();
+    const directory = (0, path_1.dirname)(filePath);
+    const arr = fileContent.split('\n').map((line) => {
+        if (!line.startsWith('@import')) {
+            return line;
+        }
+        let importPath = line.match(/@import ["'](.*)["'];/)[1];
+        if (!importPath.endsWith('.less')) {
+            importPath += '.less';
+        }
+        let newPath = (0, path_1.join)(directory, importPath);
+        const startKeys = ['~'];
+        const startKeyIndex = startKeys.findIndex(key => importPath.startsWith(key));
+        if (startKeyIndex !== -1) {
+            importPath = importPath.replace(startKeys[startKeyIndex], '');
+            newPath = (0, path_1.join)(nodeModulesPath, importPath);
+        }
+        if (config.thirdLibaryNames != null && config.thirdLibaryNames.some(key => importPath.startsWith(key))) {
+            newPath = (0, path_1.join)(nodeModulesPath, importPath);
+        }
+        return combineLess(newPath, config);
+    });
+    return arr.join('\n');
+}
+function randomColor() {
+    return '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).substring(1, 7);
+}
+function getShade(varName) {
+    const match = varName.match(/(.*)-(\d)/);
+    if (match == null)
+        return '';
+    let className = match[1];
+    if (/primary-\d/.test(varName)) {
+        className = '@primary-color';
+    }
+    return 'color(~`colorPalette("@{' + className.replace('@', '') + '}", ' + match[2] + ')`)';
+}
+function generateColorMap(themeFilePath, config) {
+    const varFileContent = combineLess(themeFilePath, config);
+    const mappings = lessToJs(varFileContent, {
+        stripPrefix: false,
+        resolveVariables: false,
+    });
+    return mappings;
+}
+function getMatches(string, regex) {
+    const matches = {};
+    let match;
+    while ((match = regex.exec(string))) {
+        if (match[2].startsWith('rgba') || match[2].startsWith('#')) {
+            matches[`@${match[1]}`] = match[2];
+        }
+    }
+    return matches;
+}
+function getValidThemeVars(mappings, variables, antdPath, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const randomColors = {};
+        const randomColorsVars = {};
+        const themeVars = variables.filter(name => name in mappings && !name.match(/(.*)-(\d)/));
+        const themeVarsCss = [];
+        themeVars.forEach(varName => {
+            let color = randomColor();
+            while (randomColorsVars[color]) {
+                color = randomColor();
+            }
+            randomColors[varName] = color;
+            randomColorsVars[color] = varName;
+            themeVarsCss.push(`.${varName.replace('@', '')} { color: ${color}; }`);
+        });
+        const varsContent = [];
+        themeVars.forEach(varName => {
+            [1, 2, 3, 4, 5, 7, 8, 9, 10].forEach(key => {
+                const name = varName === '@primary-color' ? `@primary-${key}` : `${varName}-${key}`;
+                themeVarsCss.push(`.${name.replace('@', '')} { color: ${getShade(name)}; }`);
+            });
+            varsContent.push(`${varName}: ${randomColors[varName]};`);
+        });
+        const colorFileContent = combineLess((0, path_1.join)(antdPath, './style/color/colors.less'), config);
+        const css = yield buildLess(`${colorFileContent}\n${varsContent.join('\n')}\n${themeVarsCss.reverse().join('\n')}`, config);
+        const regex = /.(?=\S*['-])?([.a-zA-Z0-9'-]+) {\n {2}color: (.*);/g;
+        const themeCompiledVars = getMatches(css.replace(/(\/.*\/)/g, ''), regex);
+        return { themeVars, randomColors, randomColorsVars, themeCompiledVars };
+    });
+}
+function generateTheme(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        nodeModulesPath = (0, path_1.join)(root, config.nodeModulesPath || 'node_modules');
+        try {
+            const mappings = generateColorMap(config.themeFilePath, config);
+            const { themeVars, themeCompiledVars } = yield getValidThemeVars(mappings, config.variables, config.ngZorroAntd, config);
+            const varsCombined = [];
+            themeVars.forEach(varName => {
+                let color;
+                if (/(.*)-(\d)/.test(varName)) {
+                    color = getShade(varName);
+                    return;
+                }
+                else {
+                    color = themeCompiledVars[varName];
+                }
+                varsCombined.push(`${varName}: ${color};`);
+            });
+            const allLessContent = `
+    @import '${config.styleFilePath}';
+    ${varsCombined.join('\n')}
+  `;
+            (0, utils_1.d)(config, 'All vars', allLessContent);
+            let css = yield buildLess(allLessContent, config);
+            css = (yield (0, postcss_1.default)([reducePlugin()]).process(css, { from: undefined })).css;
+            Object.keys(themeCompiledVars).forEach(varName => {
+                let color;
+                if (/(.*)-(\d)/.test(varName)) {
+                    color = themeCompiledVars[varName];
+                    varName = getShade(varName);
+                }
+                else {
+                    color = themeCompiledVars[varName];
+                }
+                color = color.replace('(', '\\(').replace(')', '\\)');
+                css = css.replace(new RegExp(color, 'g'), `${varName}`);
+            });
+            css = css.replace(/@[\w-_]+:\s*.*;[\/.]*/gm, '').replace(/\\9/g, '');
+            const allVar = combineLess(config.themeFilePath, config);
+            const SPLIT_ALL_VAR_KEY = '/* SPLIT_ALL_VAR_KEY */';
+            css += `\n\n${SPLIT_ALL_VAR_KEY}\n\n${allVar}`;
+            themeVars.reverse().forEach(varName => {
+                css = css.replace(new RegExp(`${varName}( *):(.*);`, 'g'), '');
+                css = `${varName}: ${mappings[varName]};\n${css}\n`;
+            });
+            const splitANTDArr = css.split(SPLIT_ALL_VAR_KEY);
+            if (splitANTDArr.length === 2) {
+                const cleanNoColor = (yield (0, postcss_1.default)([cleanNoColorVarPlugin()]).process(splitANTDArr[0], { from: undefined, syntax })).css;
+                css = cleanNoColor + splitANTDArr[1];
+            }
+            css = minifyCss(css);
+            if (config.outputFilePath) {
+                (0, fs_1.writeFileSync)(config.outputFilePath, css);
+                console.log(`✅ Color less generated successfully. Output: ${config.outputFilePath}`);
+            }
+            else {
+                console.log('Theme generated successfully');
+            }
+            return css;
+        }
+        catch (ex) {
+            console.log('error', ex);
+            return '';
+        }
+    });
+}
+exports.generateTheme = generateTheme;
+const reducePlugin = () => {
+    const cleanRule = (rule) => {
+        let removeRule = true;
+        rule.walkDecls(decl => {
+            if (decl.value.match(/url\(.*\)/g)) {
+                decl.remove();
+            }
+            const matched = false;
+            if (!decl.prop.includes('color') &&
+                !decl.prop.includes('background') &&
+                !decl.prop.includes('border') &&
+                !decl.prop.includes('box-shadow') &&
+                !Number.isNaN(decl.value)) {
+                decl.remove();
+            }
+            else {
+                removeRule = matched ? removeRule : false;
+            }
+        });
+        if (removeRule) {
+            rule.remove();
+        }
+    };
+    return {
+        postcssPlugin: 'reducePlugin',
+        Once: css => {
+            css.walkAtRules((atRule) => {
+                atRule.remove();
+            });
+            css.walkRules(cleanRule);
+            css.walkComments(c => {
+                c.remove();
+            });
+        },
+    };
+};
+const cleanNoColorVarPlugin = () => {
+    const cleanRule = (rule) => {
+        rule.walkDecls((decl) => {
+            if (decl.value.startsWith('@')) {
+                return;
+            }
+            decl.remove();
+        });
+        if (rule.nodes.length === 0) {
+            rule.remove();
+        }
+    };
+    return {
+        postcssPlugin: 'cleanNoColorVarPlugin',
+        Once: css => {
+            css.walkRules(cleanRule);
+        },
+    };
+};
+function minifyCss(css) {
+    css = css.replace(/\/\*[\s\S]*?\*\/|\/\/ .*/g, '').replace(/^\s*$(?:\r\n?|\n)/gm, '');
+    css = css.replace(/\{(\r\n?|\n)\s+/g, '{');
+    css = css.replace(/;(\r\n?|\n)\}/g, ';}');
+    css = css.replace(/;(\r\n?|\n)\s+/g, ';');
+    css = css.replace(/,(\r\n?|\n)[.]/g, ', .');
+    return css;
+}

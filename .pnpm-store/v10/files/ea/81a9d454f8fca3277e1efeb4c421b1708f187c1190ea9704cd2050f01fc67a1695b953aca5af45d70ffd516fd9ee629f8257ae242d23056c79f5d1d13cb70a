@@ -1,0 +1,13 @@
+import { Schema } from 'swagger-schema-official';
+import { FullSchemaDefinition, GenType, RunOptions } from './interfaces';
+export declare function getDefinitionName(ref: string): string;
+export declare function removeXml(property: Schema): void;
+export declare function getCustomProperty(type: GenType, name: string, options: RunOptions): any;
+export declare function findSchemaDefinition($ref: string, definitions: FullSchemaDefinition): any;
+export declare function mergeDefinitions(schema: Schema, definitions: FullSchemaDefinition): {
+    [key: string]: Schema;
+};
+export declare function deepEach(obj: any, cb: (key: string, value: any) => void): void;
+export declare function deepCopy(obj: any): any;
+export declare function deepMergeKey(original: any, ingoreArray: boolean, ...objects: any[]): any;
+export declare function deepMerge(original: any, ...objects: any[]): any;

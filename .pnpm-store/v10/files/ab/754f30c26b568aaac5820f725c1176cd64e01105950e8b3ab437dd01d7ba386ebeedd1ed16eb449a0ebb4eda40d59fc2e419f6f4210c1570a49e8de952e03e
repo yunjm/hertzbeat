@@ -1,0 +1,9 @@
+import { Config } from '../values';
+export declare class ObserverCache {
+    #private;
+    constructor(callback: IntersectionObserverCallback);
+    addNode(node: Element, config: Config): void;
+    deleteNode(node: Element, config: Config): void;
+    private create;
+    private insert;
+}

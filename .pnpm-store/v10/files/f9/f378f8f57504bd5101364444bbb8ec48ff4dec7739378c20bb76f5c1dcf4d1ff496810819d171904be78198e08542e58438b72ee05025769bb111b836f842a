@@ -1,0 +1,7 @@
+export declare class Threshold {
+    #private;
+    get value(): readonly number[];
+    constructor(value: number | number[] | null | undefined);
+    private static validate;
+    private static isValid;
+}

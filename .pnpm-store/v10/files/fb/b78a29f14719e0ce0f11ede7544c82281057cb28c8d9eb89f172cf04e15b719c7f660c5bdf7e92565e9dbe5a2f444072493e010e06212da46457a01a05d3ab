@@ -1,0 +1,118 @@
+import { OnChanges, AfterContentInit, AfterContentChecked, EventEmitter, ElementRef, Renderer2, SimpleChanges } from '@angular/core';
+import { CloudData, CloudOptions, ZoomOnHoverOptions } from './tag-cloud.interfaces';
+import * as i0 from "@angular/core";
+export declare class TagCloudComponent implements OnChanges, AfterContentInit, AfterContentChecked {
+    private el;
+    private r2;
+    data: CloudData[];
+    width?: number;
+    height?: number;
+    step?: number;
+    overflow?: boolean;
+    strict?: boolean;
+    zoomOnHover?: ZoomOnHoverOptions;
+    realignOnResize?: boolean;
+    randomizeAngle?: boolean;
+    background?: string;
+    font?: string;
+    delay?: number;
+    config: CloudOptions;
+    log?: 'warn' | 'debug' | false;
+    clicked: EventEmitter<CloudData>;
+    dataChanges: EventEmitter<SimpleChanges>;
+    afterInit: EventEmitter<void>;
+    afterChecked: EventEmitter<void>;
+    cloudDataHtmlElements: HTMLElement[];
+    private dataArr;
+    private options;
+    private timeoutId;
+    get calculatedWidth(): number;
+    get calculatedHeight(): number;
+    constructor(el: ElementRef, r2: Renderer2);
+    onResize(event: any): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    ngAfterContentInit(): void;
+    ngAfterContentChecked(): void;
+    /**
+     * re-draw the word cloud
+     * @param changes the change set
+     */
+    reDraw(changes?: SimpleChanges): void;
+    /**
+     * helper to generate a descriptive string for an entry to use when sorting alphabetically
+     * @param entry the cloud entry to be used
+     */
+    private descriptiveEntry;
+    /**
+     * proceed draw the cloud
+     */
+    private drawWordCloud;
+    /**
+     * Helper function to test if an element overlaps others
+     * @param rect the DOM rectangle that represents the element's bounds
+     */
+    private hitTest;
+    /**
+     * Pairwise overlap detection
+     * @param rect the DOM rectangle that represents the element's bounds
+     * @param e2 the second element for overlap detection
+     */
+    private overlapping;
+    /**
+     * Check if min(weight) > max(weight) otherwise use default
+     * @param word the particular word configuration
+     */
+    private getWeightForWord;
+    /**
+     * change the HTMLElements color style
+     * @param el the HTML element
+     * @param color the CSS color value
+     */
+    private setWordColor;
+    /**
+     * Add a tooltip to the element
+     * @param el the HTML element
+     * @param tooltip the tooltip text
+     */
+    private setTooltip;
+    /**
+     * change the HTMLElements rotation style
+     * @param el the HTML element
+     * @param deg the rotation value (degrees)
+     */
+    private setWordRotation;
+    /**
+     * wrap the given node into an HTML anchor element
+     * @param node the HTML node that should be wrapped
+     * @param word the particular word configuration
+     */
+    private wrapNodeIntoAnchorElement;
+    /**
+     * wrap the given node into an HTML anchor element
+     * @param node the HTML node that should be wrapped
+     * @param word the particular word configuration
+     */
+    private applyZoomStyle;
+    /**
+     * Place the word at a calculated position
+     * @param wordSpan The HTML Span element to be placed
+     * @param word The word to be placed
+     * @param index The index of the element
+     */
+    private setPosition;
+    /**
+     * Methods to draw a word, by moving it in spiral until it finds a suitable empty place.
+     * This will be iterated on each word.
+     * @param index the index number for the word
+     * @param word the particular word configuration
+     */
+    private drawWord;
+    /**
+     * Log messages to console
+     * @param level the log level
+     * @param args extra args to be logged
+     */
+    private logMessage;
+    static ɵfac: i0.ɵɵFactoryDeclaration<TagCloudComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<TagCloudComponent, "angular-tag-cloud, ng-tag-cloud, ngtc", never, { "data": { "alias": "data"; "required": false; }; "width": { "alias": "width"; "required": false; }; "height": { "alias": "height"; "required": false; }; "step": { "alias": "step"; "required": false; }; "overflow": { "alias": "overflow"; "required": false; }; "strict": { "alias": "strict"; "required": false; }; "zoomOnHover": { "alias": "zoomOnHover"; "required": false; }; "realignOnResize": { "alias": "realignOnResize"; "required": false; }; "randomizeAngle": { "alias": "randomizeAngle"; "required": false; }; "background": { "alias": "background"; "required": false; }; "font": { "alias": "font"; "required": false; }; "delay": { "alias": "delay"; "required": false; }; "config": { "alias": "config"; "required": false; }; "log": { "alias": "log"; "required": false; }; }, { "clicked": "clicked"; "dataChanges": "dataChanges"; "afterInit": "afterInit"; "afterChecked": "afterChecked"; }, never, never, true, never>;
+}

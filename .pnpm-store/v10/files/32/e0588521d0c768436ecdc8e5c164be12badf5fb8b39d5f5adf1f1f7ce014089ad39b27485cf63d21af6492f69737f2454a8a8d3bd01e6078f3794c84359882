@@ -1,0 +1,31 @@
+{
+  "name": "angular-tag-cloud-module",
+  "version": "17.0.1",
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^17.0.0 || ^18.0.0-0",
+    "@angular/core": "^17.0.0 || ^18.0.0-0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d-koppenhagen/angular-tag-cloud-module.git",
+    "directory": "projects/angular-tag-cloud-module"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "module": "fesm2022/angular-tag-cloud-module.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "esm2022": "./esm2022/angular-tag-cloud-module.mjs",
+      "esm": "./esm2022/angular-tag-cloud-module.mjs",
+      "default": "./fesm2022/angular-tag-cloud-module.mjs"
+    }
+  },
+  "sideEffects": false
+}

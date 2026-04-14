@@ -1,0 +1,13 @@
+import { Config } from '../values';
+import * as i0 from "@angular/core";
+export declare class InViewportService {
+    #private;
+    readonly trigger$: import("rxjs").Observable<IntersectionObserverEntry>;
+    private readonly zone;
+    constructor();
+    register(node: Element, config: Config): void;
+    unregister(node: Element, config: Config): void;
+    private onIntersectionEvent;
+    static ɵfac: i0.ɵɵFactoryDeclaration<InViewportService, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<InViewportService>;
+}

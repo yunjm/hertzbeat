@@ -1,0 +1,3 @@
+import { Spec } from 'swagger-schema-official';
+import { Config, Options, Result } from './interfaces';
+export declare function generator(swaggerJsonPathOrUrl: string | Spec, options: Options, config?: Config): Promise<Result>;

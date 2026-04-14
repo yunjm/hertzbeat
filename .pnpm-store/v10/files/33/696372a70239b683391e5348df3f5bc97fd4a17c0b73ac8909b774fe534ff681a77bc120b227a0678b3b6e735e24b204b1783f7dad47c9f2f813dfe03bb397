@@ -1,0 +1,8 @@
+import { TemplateRef } from '@angular/core';
+import * as i0 from "@angular/core";
+export declare class QueryRulesetAddRuleButtonDirective {
+    template: TemplateRef<any>;
+    constructor(template: TemplateRef<any>);
+    static ɵfac: i0.ɵɵFactoryDeclaration<QueryRulesetAddRuleButtonDirective, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<QueryRulesetAddRuleButtonDirective, "[queryRulesetAddRuleButton]", never, {}, {}, never, never, false, never>;
+}

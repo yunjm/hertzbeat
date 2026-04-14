@@ -1,0 +1,6 @@
+/*
+ * Public API Surface of angular-tag-cloud-module
+ */
+export * from './lib/tag-cloud.interfaces';
+export * from './lib/tag-cloud.component';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3Byb2plY3RzL2FuZ3VsYXItdGFnLWNsb3VkLW1vZHVsZS9zcmMvcHVibGljLWFwaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7R0FFRztBQUVILGNBQWMsNEJBQTRCLENBQUM7QUFDM0MsY0FBYywyQkFBMkIsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qXG4gKiBQdWJsaWMgQVBJIFN1cmZhY2Ugb2YgYW5ndWxhci10YWctY2xvdWQtbW9kdWxlXG4gKi9cblxuZXhwb3J0ICogZnJvbSAnLi9saWIvdGFnLWNsb3VkLmludGVyZmFjZXMnO1xuZXhwb3J0ICogZnJvbSAnLi9saWIvdGFnLWNsb3VkLmNvbXBvbmVudCc7XG4iXX0=

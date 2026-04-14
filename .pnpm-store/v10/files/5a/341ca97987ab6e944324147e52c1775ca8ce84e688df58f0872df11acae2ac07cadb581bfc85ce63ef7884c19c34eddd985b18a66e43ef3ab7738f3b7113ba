@@ -1,0 +1,24 @@
+import { Config } from './config';
+export interface InViewportCheckFnOptions {
+    /**
+     *  Whether action was triggered programmatically.
+     */
+    force: boolean;
+    /**
+     *  When an action is triggered programmatically, this property will hold a simulated visibility state.
+     */
+    forcedValue?: boolean;
+    /**
+     *  Instance of a configuration object.
+     */
+    config: Config;
+}
+export interface InViewportCheckFn<T = any> {
+    (entry: IntersectionObserverEntry | undefined, options: InViewportCheckFnOptions): T;
+}
+export declare class CheckFn<T = any> {
+    #private;
+    get value(): InViewportCheckFn<T> | undefined;
+    get id(): string;
+    constructor(value: InViewportCheckFn<T> | null | undefined);
+}

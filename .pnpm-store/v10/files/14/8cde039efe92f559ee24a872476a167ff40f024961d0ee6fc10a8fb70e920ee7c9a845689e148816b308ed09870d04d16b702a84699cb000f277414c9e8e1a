@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+"use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = __importStar(require("fs"));
+const meow_1 = __importDefault(require("meow"));
+const path = __importStar(require("path"));
+const generator_1 = require("./generator");
+const cli = meow_1.default({
+    help: `
+  Usage
+    ng-alain-sts <Swagger JSON file path Or Url>
+  Example
+    ng-alain-sts -t=sf -p=/pet swagger.json
+  Options
+    -t, --type    Specified generate type, can be set 'sf' or 'st', default: 'sf'
+    -p, --path    Specified path, e.g: '/api/pet', '/pet'
+    -m, --method  Specified method type, e.g: 'get', 'post', default: 'get'
+    -c, --config  A filepath of your config script
+  `,
+    flags: {
+        type: {
+            type: 'string',
+            alias: 't',
+            default: 'sf',
+        },
+        path: {
+            type: 'string',
+            alias: 'p',
+        },
+        method: {
+            type: 'string',
+            default: 'get',
+            alias: 'm',
+        },
+        config: {
+            type: 'string',
+            default: 'swagger-config.json',
+            alias: 'c',
+        },
+    },
+});
+const options = Object.assign({}, cli.flags);
+const { config } = cli.flags;
+let configInFile = {};
+try {
+    const configFile = path.resolve(process.cwd(), config);
+    if (fs.existsSync(configFile)) {
+        configInFile = require(configFile);
+    }
+    else {
+        console.error(`The config file '${config}' will not found`);
+        process.exit(1);
+    }
+}
+catch (err) {
+    console.error('Invalid config file', err);
+    process.exit(1);
+}
+generator_1.generator(cli.input[0], options, configInFile);

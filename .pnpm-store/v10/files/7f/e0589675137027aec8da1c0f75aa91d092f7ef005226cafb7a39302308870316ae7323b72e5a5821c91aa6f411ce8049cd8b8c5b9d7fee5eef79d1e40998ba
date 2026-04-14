@@ -1,0 +1,6 @@
+/// <reference types="less" />
+export interface Config {
+    debug?: boolean;
+    name?: string;
+    buildLessOptions?: Less.Options;
+}

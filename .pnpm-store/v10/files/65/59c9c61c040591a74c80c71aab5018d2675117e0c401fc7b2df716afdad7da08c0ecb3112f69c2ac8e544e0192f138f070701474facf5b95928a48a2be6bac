@@ -1,0 +1,161 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildThemeCSS = void 0;
+const path_1 = require("path");
+const fs_1 = require("fs");
+const less_1 = __importDefault(require("less"));
+const lessToJs = require('less-vars-to-js');
+const LessPluginCleanCSS = require('less-plugin-clean-css');
+const utils_1 = require("./utils");
+const root = process.cwd();
+let node_modulesPath = '';
+function fixConfig(config) {
+    var _a;
+    let styleSourceRoot = 'src';
+    if (config.name) {
+        const angularJsonPath = (0, path_1.join)(root, 'angular.json');
+        const sourceRoot = (_a = (0, utils_1.getJSON)(angularJsonPath)) === null || _a === void 0 ? void 0 : _a.projects[config.name].sourceRoot;
+        if (sourceRoot != null) {
+            styleSourceRoot = sourceRoot;
+        }
+    }
+    config = (0, utils_1.deepMergeKey)({
+        additionalLibraries: [],
+        additionalThemeVars: [],
+        list: [],
+        min: true,
+        projectStylePath: (0, utils_1.mergePath)(styleSourceRoot, 'styles.less'),
+    }, true, config);
+    const list = [];
+    config.list.forEach(item => {
+        if (!item.theme && !item.modifyVars) {
+            return;
+        }
+        if (!item.key) {
+            item.key = item.theme || 'invalid-key';
+        }
+        if (!item.filePath) {
+            item.filePath = (0, utils_1.mergePath)(styleSourceRoot, `assets/style.${item.key || 'invalid-name'}.css`);
+        }
+        list.push(Object.assign({ projectThemeVar: [] }, item));
+    });
+    if (list.length === 0) {
+        throw new Error(`Not found valid theme configuration`);
+    }
+    config.list = list;
+    return config;
+}
+function genThemeVars(type, extraThemeVars) {
+    const contents = [];
+    const ngZorroAntdStylePath = (0, path_1.join)(root, node_modulesPath, 'ng-zorro-antd', 'style');
+    if ((0, fs_1.existsSync)(ngZorroAntdStylePath)) {
+        contents.push((0, fs_1.readFileSync)((0, path_1.join)(ngZorroAntdStylePath, 'color', 'colors.less'), 'utf-8'));
+        contents.push((0, fs_1.readFileSync)((0, path_1.join)(ngZorroAntdStylePath, 'themes', `${type}.less`), 'utf-8'));
+    }
+    const delonPath = (0, path_1.join)(root, node_modulesPath, '@delon');
+    const delonSystem = (0, path_1.join)(delonPath, 'theme');
+    if ((0, fs_1.existsSync)(delonSystem)) {
+        [
+            (0, path_1.join)(delonSystem, 'system', `theme-${type}.less`),
+            (0, path_1.join)(delonSystem, 'layout-default', 'style', `theme-${type}.less`),
+            (0, path_1.join)(delonSystem, 'layout-blank', 'style', `theme-${type}.less`),
+        ].forEach(filePath => {
+            if (!(0, fs_1.existsSync)(filePath)) {
+                console.warn(`主题路径 ${filePath} 不存在`);
+                return;
+            }
+            contents.push((0, fs_1.readFileSync)(filePath, 'utf-8'));
+        });
+    }
+    ['abc', 'chart'].forEach(libName => {
+        const libThemePath = (0, path_1.join)(delonPath, libName, `theme-${type}.less`);
+        if ((0, fs_1.existsSync)(libThemePath)) {
+            contents.push((0, fs_1.readFileSync)(libThemePath, 'utf-8'));
+        }
+    });
+    if (Array.isArray(extraThemeVars) && extraThemeVars.length > 0) {
+        contents.push(...extraThemeVars.map(path => {
+            const lessFilePath = (0, path_1.join)(root, path.replace(`#NAME#`, type));
+            if (!(0, fs_1.existsSync)(lessFilePath)) {
+                return '';
+            }
+            return (0, fs_1.readFileSync)(lessFilePath, 'utf-8');
+        }));
+    }
+    return lessToJs(contents.join(''), {
+        stripPrefix: true,
+        resolveVariables: false,
+    });
+}
+function genVar(config, item) {
+    var _a;
+    const fileContent = (_a = item.projectThemeVar) === null || _a === void 0 ? void 0 : _a.map(path => (0, fs_1.readFileSync)((0, path_1.join)(root, path), 'utf-8'));
+    fileContent.push((0, fs_1.readFileSync)((0, path_1.join)(root, config.projectStylePath), 'utf-8'));
+    let projectTheme = {};
+    if (fileContent) {
+        projectTheme = lessToJs(fileContent.join(''), {
+            stripPrefix: true,
+            resolveVariables: false,
+        });
+    }
+    const modifyVars = item.modifyVars || {};
+    const stripPrefixOfModifyVars = {};
+    Object.keys(modifyVars).forEach(key => {
+        const newKey = key.startsWith('@') ? key.substr(1) : key;
+        stripPrefixOfModifyVars[newKey] = modifyVars[key];
+    });
+    const additionalThemeVars = config.additionalThemeVars;
+    return Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, genThemeVars('default', additionalThemeVars)), (item.theme === 'dark' ? genThemeVars('dark', additionalThemeVars) : null)), (item.theme === 'compact' ? genThemeVars('compact', additionalThemeVars) : null)), projectTheme), stripPrefixOfModifyVars);
+}
+function buildCss(options, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const plugins = [];
+        if (options.min === true) {
+            plugins.push(new LessPluginCleanCSS({ advanced: true }));
+        }
+        return less_1.default
+            .render(options.content, Object.assign(Object.assign({ javascriptEnabled: true, plugins, paths: ['node_modules/'] }, config.buildLessOptions), { modifyVars: Object.assign({}, options.modifyVars) }))
+            .then(res => res.css);
+    });
+}
+function buildThemeCSS(config) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        node_modulesPath = config.nodeModulesPath || 'node_modules';
+        config = fixConfig(config);
+        const promises = (_a = config.list) === null || _a === void 0 ? void 0 : _a.map(item => {
+            const modifyVars = genVar(config, item);
+            (0, utils_1.d)(config, 'All Modify Vars', modifyVars);
+            const content = [
+                `@import '${config.projectStylePath}';`,
+                ...config.additionalLibraries.map(v => `@import '${v}';`),
+            ].join('');
+            const options = {
+                min: config.min,
+                content,
+                modifyVars,
+            };
+            if ((0, fs_1.existsSync)(item.filePath)) {
+                (0, fs_1.unlinkSync)(item.filePath);
+            }
+            return buildCss(options, config).then(css => {
+                (0, fs_1.writeFileSync)(item.filePath, css);
+                console.log(`✅ Style '${item.key}' generated successfully. Output: ${item.filePath}`);
+            });
+        });
+        yield Promise.all(promises);
+    });
+}
+exports.buildThemeCSS = buildThemeCSS;

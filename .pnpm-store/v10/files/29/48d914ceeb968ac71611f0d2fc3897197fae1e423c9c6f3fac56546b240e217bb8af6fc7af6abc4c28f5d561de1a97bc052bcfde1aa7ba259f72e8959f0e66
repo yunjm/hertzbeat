@@ -1,0 +1,11 @@
+import { OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs';
+import * as i0 from "@angular/core";
+export declare class DestroyableDirective implements OnDestroy {
+    readonly destroyed$: Observable<void>;
+    private readonly destroyed$$;
+    constructor();
+    ngOnDestroy(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DestroyableDirective, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<DestroyableDirective, "[inViewportDestroyable]", never, {}, {}, never, never, true, never>;
+}

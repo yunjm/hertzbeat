@@ -1,0 +1,441 @@
+import * as i0 from '@angular/core';
+import { Directive, inject, NgZone, Injectable, EventEmitter, PLATFORM_ID, ChangeDetectorRef, ElementRef, Input, Output, NgModule } from '@angular/core';
+import { ReplaySubject, Subject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import { filter, takeUntil } from 'rxjs/operators';
+import { isFunction, isNil, uniqueId, isBoolean, isString, isNumber } from 'lodash-es';
+
+class DestroyableDirective {
+    constructor() {
+        this.destroyed$$ = new ReplaySubject(1);
+        this.destroyed$ = this.destroyed$$.asObservable();
+    }
+    ngOnDestroy() {
+        if (this.destroyed$$ && !this.destroyed$$.closed) {
+            this.destroyed$$.next();
+            this.destroyed$$.complete();
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: DestroyableDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.0.6", type: DestroyableDirective, isStandalone: true, selector: "[inViewportDestroyable]", ngImport: i0 }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: DestroyableDirective, decorators: [{
+            type: Directive,
+            args: [{
+                    standalone: true,
+                    selector: '[inViewportDestroyable]',
+                }]
+        }], ctorParameters: function () { return []; } });
+
+const isObject = (value) => Object.prototype.toString.call(value) === '[object Object]';
+
+const ids = new WeakMap();
+const fallbackId = 'in-viewport-empty-check-fn';
+class CheckFn {
+    #value;
+    #id;
+    get value() {
+        return this.#value;
+    }
+    get id() {
+        return this.#id;
+    }
+    constructor(value) {
+        this.#value = isFunction(value) ? value : undefined;
+        let id = ids.get(value) ?? fallbackId;
+        if (!isNil(value) && !ids.has(value)) {
+            ids.set(value, (id = uniqueId('in-viewport-check-fn-')));
+        }
+        this.#id = id;
+    }
+}
+
+var InViewportDirection;
+(function (InViewportDirection) {
+    InViewportDirection["BOTH"] = "both";
+    InViewportDirection["VERTICAL"] = "vertical";
+    InViewportDirection["HORIZONTAL"] = "horizontal";
+})(InViewportDirection || (InViewportDirection = {}));
+
+class InvalidDirectionException extends TypeError {
+    constructor() {
+        const values = Object.values(InViewportDirection).join('|');
+        super(`The provided value for the direction is incorrect. The value must be any of \`${values}\`.`);
+    }
+}
+
+class InvalidRootMarginException extends TypeError {
+    constructor() {
+        super('The provided value for the rootMargin is incorrect. The value must be specified in pixels or percent.');
+    }
+}
+
+class InvalidRootNodeException extends TypeError {
+    constructor() {
+        super(`The provided value for the root is incorrect. The value must be of type '(Document or Element)'.`);
+    }
+}
+
+class InvalidThresholdException extends TypeError {
+    constructor() {
+        super('The provided values for the threshold are incorrect. The values must be numbers between 0 and 1.');
+    }
+}
+
+class Direction {
+    #value;
+    get value() {
+        return this.#value;
+    }
+    constructor(value = InViewportDirection.VERTICAL) {
+        if (!Object.values(InViewportDirection).includes(value)) {
+            throw new InvalidDirectionException();
+        }
+        this.#value = value;
+    }
+}
+
+class Partial {
+    #value;
+    get value() {
+        return this.#value;
+    }
+    constructor(value) {
+        this.#value = isBoolean(value) ? value : true;
+    }
+}
+
+class RootMargin {
+    #value;
+    get value() {
+        return this.#value;
+    }
+    constructor(value) {
+        this.#value = RootMargin.parse(value);
+    }
+    static parse(value) {
+        const strValue = isString(value) ? value.trim() : '0px';
+        const values = strValue.split(/\s+/);
+        if (values.length <= 4 && values.every((val) => /^-?\d*\.?\d+(px|%)$/.test(val))) {
+            const [top, right = top, bottom = top, left = right] = values;
+            return `${top} ${right} ${bottom} ${left}`;
+        }
+        throw new InvalidRootMarginException();
+    }
+}
+
+class RootNode {
+    #value;
+    get value() {
+        return this.#value;
+    }
+    constructor(node) {
+        this.#value = RootNode.validate(node);
+    }
+    static validate(node) {
+        if (isNil(node)) {
+            return null;
+        }
+        if (node instanceof Element && node.nodeType === Node.ELEMENT_NODE) {
+            return node;
+        }
+        throw new InvalidRootNodeException();
+    }
+}
+
+class Threshold {
+    #value;
+    get value() {
+        return this.#value;
+    }
+    constructor(value) {
+        this.#value = Threshold.validate(value ?? [0, 1]);
+    }
+    static validate(value) {
+        if (Threshold.isValid(value)) {
+            return [value];
+        }
+        if (Array.isArray(value) && value.every((val) => Threshold.isValid(val))) {
+            return value.sort();
+        }
+        throw new InvalidThresholdException();
+    }
+    static isValid(value) {
+        return isNumber(value) && value >= 0 && value <= 1;
+    }
+}
+
+const checkFnId = Symbol('InViewportCheckFnId');
+const configHash = Symbol('InViewportConfigHash');
+class Config {
+    #value;
+    #hash;
+    get root() {
+        return this.#value.root.value;
+    }
+    get rootMargin() {
+        return this.#value.rootMargin.value;
+    }
+    get threshold() {
+        return this.#value.threshold.value;
+    }
+    get partial() {
+        return this.#value.partial.value;
+    }
+    get direction() {
+        return this.#value.direction.value;
+    }
+    get checkFn() {
+        return this.#value.checkFn.value;
+    }
+    get [checkFnId]() {
+        return this.#value.checkFn.id;
+    }
+    get [configHash]() {
+        return this.#hash;
+    }
+    constructor(options) {
+        options ??= {};
+        this.#value = Object.freeze({
+            root: new RootNode(options.root),
+            rootMargin: new RootMargin(options.rootMargin),
+            threshold: new Threshold(options.threshold),
+            partial: new Partial(options.partial),
+            direction: new Direction(options.direction),
+            checkFn: new CheckFn(options.checkFn),
+        });
+        this.#hash = toBase64(stringify({
+            rootMargin: this.rootMargin,
+            threshold: this.threshold,
+            partial: this.partial,
+            direction: this.direction,
+            checkFn: this[checkFnId],
+        }));
+    }
+}
+
+class ObserverCacheItem {
+    #nodes = new Set();
+    #observer;
+    #destroy;
+    constructor(config, callback) {
+        this.#observer = new IntersectionObserver((...args) => {
+            callback.next(...args);
+        }, {
+            root: config.root,
+            rootMargin: config.rootMargin,
+            threshold: [...config.threshold],
+        });
+        this.#destroy = () => {
+            this.#observer.disconnect();
+            callback.complete();
+        };
+    }
+    addNode(node) {
+        this.#nodes.add(node);
+        this.#observer.observe(node);
+    }
+    deleteNode(node) {
+        this.#nodes.delete(node);
+        this.#nodes.size ? this.#observer.unobserve(node) : this.#destroy();
+    }
+}
+
+class ObserverCache {
+    static #EMPTY_ROOT = Object.create(null);
+    #cache = new WeakMap();
+    #callback;
+    constructor(callback) {
+        this.#callback = callback;
+    }
+    addNode(node, config) {
+        const items = this.#cache.get(config.root ?? ObserverCache.#EMPTY_ROOT) ?? this.create(config);
+        const hash = config[configHash];
+        // Scenario when configuration with new hash appears,
+        // but root is already in cache.
+        if (!items.has(hash)) {
+            this.insert(items, config);
+        }
+        items.get(hash).addNode(node);
+    }
+    deleteNode(node, config) {
+        const items = this.#cache.get(config.root ?? ObserverCache.#EMPTY_ROOT);
+        const hash = config[configHash];
+        if (items && items.has(hash)) {
+            items.get(hash).deleteNode(node);
+        }
+        if (items && items.size === 0) {
+            this.#cache.delete(config.root ?? ObserverCache.#EMPTY_ROOT);
+        }
+    }
+    create(config) {
+        const items = new Map();
+        this.#cache.set(config.root ?? ObserverCache.#EMPTY_ROOT, items);
+        this.insert(items, config);
+        return items;
+    }
+    insert(items, config) {
+        const hash = config[configHash];
+        const cacheItem = new ObserverCacheItem(config, {
+            next: (...args) => {
+                this.#callback(...args);
+            },
+            complete: () => {
+                items.delete(hash);
+            },
+        });
+        items.set(hash, cacheItem);
+    }
+}
+
+const stringify = (input) => {
+    if (Array.isArray(input)) {
+        return `[${input.map(stringify).join(',')}]`;
+    }
+    if (isObject(input)) {
+        return Object.entries(input)
+            .sort(([a], [b]) => String(a).localeCompare(String(b)))
+            .map(([key, value]) => `${key}:${stringify(value)}`)
+            .join('|');
+    }
+    return String(input);
+};
+
+const toBase64 = (value) => {
+    try {
+        const input = globalThis.encodeURI(value);
+        return globalThis.btoa(input);
+    }
+    catch {
+        return value;
+    }
+};
+
+class InViewportService {
+    #trigger$;
+    #cache;
+    constructor() {
+        this.#trigger$ = new Subject();
+        this.trigger$ = this.#trigger$.asObservable();
+        this.zone = inject(NgZone);
+        this.zone.runOutsideAngular(() => {
+            this.#cache = new ObserverCache((entries) => this.onIntersectionEvent(entries));
+        });
+    }
+    register(node, config) {
+        this.zone.runOutsideAngular(() => {
+            this.#cache.addNode(node, config);
+        });
+    }
+    unregister(node, config) {
+        this.zone.runOutsideAngular(() => {
+            this.#cache.deleteNode(node, config);
+        });
+    }
+    onIntersectionEvent(entries = []) {
+        this.zone.run(() => entries.forEach((entry) => this.#trigger$.next(entry)));
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportService, deps: [], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportService, providedIn: 'root' }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportService, decorators: [{
+            type: Injectable,
+            args: [{ providedIn: 'root' }]
+        }], ctorParameters: function () { return []; } });
+
+const InViewportMetadata = Symbol('InViewportMetadata');
+class InViewportDirective {
+    constructor() {
+        this.inViewportAction = new EventEmitter();
+        this.inViewportCustomCheck = new EventEmitter();
+        this.config = new Config({});
+        this.platformId = inject(PLATFORM_ID);
+        this.changeDetectorRef = inject(ChangeDetectorRef);
+        this.elementRef = inject(ElementRef);
+        this.destroyable = inject(DestroyableDirective, { self: true });
+        this.inViewportService = inject(InViewportService);
+    }
+    set options(options) {
+        this.config = new Config(options);
+    }
+    get nativeElement() {
+        return this.elementRef.nativeElement;
+    }
+    ngAfterViewInit() {
+        if (!isPlatformBrowser(this.platformId)) {
+            this.emit(undefined, true, true);
+            return;
+        }
+        this.inViewportService.trigger$
+            .pipe(filter((entry) => entry.target === this.nativeElement), takeUntil(this.destroyable.destroyed$))
+            .subscribe((entry) => {
+            this.emit(entry, false);
+            this.changeDetectorRef.markForCheck();
+        });
+        this.inViewportService.register(this.nativeElement, this.config);
+    }
+    ngOnDestroy() {
+        if (isPlatformBrowser(this.platformId)) {
+            this.inViewportService.unregister(this.nativeElement, this.config);
+            this.emit(undefined, true, false);
+        }
+    }
+    isVisible(entry) {
+        return this.config.partial ? entry.isIntersecting || entry.intersectionRatio > 0 : entry.intersectionRatio >= 1;
+    }
+    emit(entry, force, forcedValue) {
+        this.inViewportAction.emit({
+            [InViewportMetadata]: { entry },
+            target: this.nativeElement,
+            visible: force ? !!forcedValue : !entry || this.isVisible(entry),
+        });
+        if (this.config.checkFn) {
+            this.inViewportCustomCheck.emit(this.config.checkFn(entry, {
+                force,
+                forcedValue: force ? !!forcedValue : undefined,
+                config: this.config,
+            }));
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.0.6", type: InViewportDirective, isStandalone: true, selector: "[inViewport]", inputs: { options: ["inViewportOptions", "options"] }, outputs: { inViewportAction: "inViewportAction", inViewportCustomCheck: "inViewportCustomCheck" }, hostDirectives: [{ directive: DestroyableDirective }], ngImport: i0 }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportDirective, decorators: [{
+            type: Directive,
+            args: [{
+                    standalone: true,
+                    selector: '[inViewport]',
+                    hostDirectives: [DestroyableDirective],
+                }]
+        }], propDecorators: { options: [{
+                type: Input,
+                args: ['inViewportOptions']
+            }], inViewportAction: [{
+                type: Output
+            }], inViewportCustomCheck: [{
+                type: Output
+            }] } });
+
+class InViewportModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.0.6", ngImport: i0, type: InViewportModule, imports: [InViewportDirective, DestroyableDirective], exports: [InViewportDirective, DestroyableDirective] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportModule }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.0.6", ngImport: i0, type: InViewportModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [InViewportDirective, DestroyableDirective],
+                    exports: [InViewportDirective, DestroyableDirective],
+                }]
+        }] });
+
+/*
+ * Public API Surface of ng-in-viewport
+ */
+
+/**
+ * Generated bundle index. Do not edit.
+ */
+
+export { Config, DestroyableDirective, InViewportDirection, InViewportDirective, InViewportMetadata, InViewportModule, InViewportService, InvalidDirectionException, InvalidRootMarginException, InvalidRootNodeException, InvalidThresholdException };
+//# sourceMappingURL=ng-in-viewport.mjs.map

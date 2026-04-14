@@ -1,0 +1,12 @@
+@import '../../../theme/theme-default.less';
+@full-content-prefix: ~'.full-content';
+
+@{full-content-prefix} {
+  overflow: auto;
+  display: block;
+  height: 100%;
+
+  &__body {
+    overflow: hidden;
+  }
+}

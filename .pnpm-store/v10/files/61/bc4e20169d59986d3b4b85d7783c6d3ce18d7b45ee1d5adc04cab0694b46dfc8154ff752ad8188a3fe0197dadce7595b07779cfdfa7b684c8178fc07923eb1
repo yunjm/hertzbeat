@@ -1,0 +1,272 @@
+@import '../../../theme/theme-default.less';
+@sv-prefix: ~'.sv';
+
+@{sv-prefix} {
+  display: block;
+
+  + @{sv-prefix} {
+    margin-top: @sv-bottom;
+  }
+
+  &__container {
+    display: block;
+
+    // offset the padding-bottom of last row
+    .@{ant-prefix}-row {
+      overflow: hidden;
+      margin-bottom: -@sv-bottom;
+    }
+  }
+
+  &__item {
+    &-fixed {
+      display: flex;
+
+      @{sv-prefix}__label {
+        overflow: hidden;
+        flex: 0 0 auto;
+        text-align: right;
+        text-overflow: ellipsis;
+      }
+
+      @{sv-prefix}__detail {
+        flex: 1 0 0;
+      }
+    }
+    + .@{ant-prefix}-divider {
+      margin: 0 0 @sv-bottom 0;
+    }
+  }
+
+  &__title {
+    float: none;
+    clear: both;
+    display: block;
+    width: 100%;
+    margin-bottom: @sv-bottom;
+    font-size: 14px;
+    font-weight: 500;
+    color: @heading-color;
+  }
+
+  &__label {
+    display: table-cell;
+    // margin-right: 8px;
+    padding-bottom: @sv-bottom;
+    line-height: 22px;
+    color: @sv-label-color;
+    white-space: nowrap;
+
+    &:not(@{sv-prefix}__label-empty) {
+      &::after {
+        content: ':';
+        position: relative;
+        top: -0.5px;
+        margin: 0 8px 0 2px;
+      }
+    }
+
+    &-optional {
+      margin-left: @sv-optional-margin;
+      color: @sv-label-optional-color;
+
+      &-no-text {
+        margin-left: 0;
+      }
+
+      > .anticon {
+        margin-left: @sv-optional-margin;
+      }
+    }
+  }
+
+  &__detail {
+    // contents 对 ie, edge 不支持，但对于子组件的支持会更友好
+    display: table-cell;
+    width: 100%;
+    padding-bottom: @sv-bottom;
+    line-height: 22px;
+    color: @sv-detail-color;
+    word-break: break-all;
+    vertical-align: top;
+  }
+
+  &__type {
+    &-primary @{sv-prefix}__detail {
+      color: @sv-type-primary-color;
+    }
+
+    &-success @{sv-prefix}__detail {
+      color: @sv-type-success-color;
+    }
+
+    &-danger @{sv-prefix}__detail {
+      color: @sv-type-danger-color;
+    }
+
+    &-warning @{sv-prefix}__detail {
+      color: @sv-type-warning-color;
+    }
+  }
+
+  &__default {
+    &::before {
+      content: @sv-default-text;
+    }
+
+    ~ @{sv-prefix}__unit {
+      display: none !important;
+    }
+  }
+
+  &__unit {
+    display: inline;
+    margin-left: @sv-unit-margin;
+    color: @sv-unit-color;
+  }
+
+  &__small {
+    // offset the padding-bottom of last row
+    .@{ant-prefix}-row {
+      margin-bottom: -8px;
+    }
+
+    @{sv-prefix}__title {
+      margin-bottom: 12px;
+      color: @text-color;
+    }
+
+    @{sv-prefix}__label,
+    @{sv-prefix}__detail {
+      padding-bottom: 8px;
+    }
+  }
+
+  &__value {
+    display: inline-flex;
+    align-items: center;
+
+    &-prefix,
+    &-unit {
+      font-size: @sv-value-prefix-unit-font-size;
+      font-style: normal;
+      color: @sv-value-prefix-unit-color;
+    }
+
+    &-prefix {
+      padding-right: 3px;
+    }
+
+    &-text {
+      // font-weight: 700;
+      font-size: @sv-value-default-value-font-size;
+    }
+
+    &-unit {
+      padding-left: 3px;
+    }
+
+    &:not(:first-child) {
+      position: relative;
+      margin-left: @sv-value-mulit-padding;
+      padding-left: @sv-value-mulit-padding + @sv-value-mulit-content-width;
+
+      &::before {
+        content: @sv-value-mulit-content;
+        position: absolute;
+        left: 0;
+        width: @sv-value-mulit-content-width;
+        color: @sv-label-color;
+      }
+    }
+
+    &-small {
+      @{sv-prefix}__value {
+        &-text {
+          font-size: @sv-value-small-value-font-size;
+        }
+      }
+    }
+
+    &-large {
+      @{sv-prefix}__value {
+        &-text {
+          font-size: @sv-value-large-value-font-size;
+        }
+      }
+    }
+  }
+
+  &__large {
+    @{sv-prefix}__title {
+      font-size: 16px;
+    }
+  }
+
+  &__horizontal {
+    @{sv-prefix}__label-width {
+      display: flex;
+      justify-content: flex-end;
+
+      @{sv-prefix}__label-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__vertical {
+    @{sv-prefix}__label {
+      padding-bottom: 8px;
+    }
+
+    @{sv-prefix}__label,
+    @{sv-prefix}__detail {
+      display: block;
+    }
+  }
+
+  &__no-colon::after {
+    content: ' ' !important;
+  }
+
+  &__bordered {
+    overflow: hidden;
+    border-top: 1px solid @border-color-split;
+    border-left: 1px solid @border-color-split;
+
+    @{sv-prefix}__item {
+      border-right: 1px solid @border-color-split;
+      border-bottom: 1px solid @border-color-split;
+    }
+
+    @{sv-prefix}__label {
+      background-color: @descriptions-bg;
+      border-right: 1px solid @border-color-split;
+    }
+
+    @{sv-prefix}__label,
+    @{sv-prefix}__detail {
+      padding: @descriptions-middle-padding;
+    }
+
+    &@{sv-prefix}__large {
+      @{sv-prefix}__label,
+      @{sv-prefix}__detail {
+        padding: @descriptions-default-padding;
+      }
+    }
+
+    &@{sv-prefix}__small {
+      @{sv-prefix}__label,
+      @{sv-prefix}__detail {
+        padding: @descriptions-small-padding;
+      }
+    }
+
+    // offset the padding-bottom of last row
+    .@{ant-prefix}-row {
+      margin-bottom: 0;
+    }
+  }
+}

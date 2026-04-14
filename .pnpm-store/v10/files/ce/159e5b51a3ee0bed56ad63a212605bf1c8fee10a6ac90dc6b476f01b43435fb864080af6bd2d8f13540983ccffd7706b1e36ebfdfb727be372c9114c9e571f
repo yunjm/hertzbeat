@@ -1,0 +1,3 @@
+import { Spec } from 'swagger-schema-official';
+import { Config, Options, ResultValue } from './interfaces';
+export declare function generator(data: Spec, options: Options, config: Config): ResultValue | null;

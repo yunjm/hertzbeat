@@ -1,0 +1,75 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = __importStar(require("fs"));
+const http = __importStar(require("http"));
+const https = __importStar(require("https"));
+const Url = __importStar(require("url"));
+const interfaces_1 = require("./interfaces");
+const st_1 = require("./st");
+const sf_1 = require("./sf");
+const util_1 = require("./util");
+function getSwagger(pathOrUrl, options) {
+    return new Promise((resolve) => {
+        if (typeof pathOrUrl === 'object') {
+            return resolve(pathOrUrl);
+        }
+        else if (pathOrUrl.startsWith('http:') ||
+            pathOrUrl.startsWith('https:')) {
+            const url = new Url.URL(pathOrUrl);
+            const client = url.protocol === 'https:' ? https : http;
+            return client
+                .request(url, options, (res) => {
+                let result = '';
+                res.setEncoding('UTF-8');
+                res.on('data', (data) => (result += data));
+                res.on('error', () => resolve(null));
+                res.once('end', () => resolve(JSON.parse(result)));
+            })
+                .on('error', () => resolve(null));
+        }
+        else if (pathOrUrl.trim().startsWith('{')) {
+            return resolve(JSON.parse(pathOrUrl));
+        }
+        else if (fs.existsSync(pathOrUrl)) {
+            return resolve(JSON.parse(fs.readFileSync(pathOrUrl).toString('utf8')));
+        }
+        else {
+            return resolve(null);
+        }
+    });
+}
+function generator(swaggerJsonPathOrUrl, options, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const cog = util_1.deepMerge({}, interfaces_1.CONFIG, config || {});
+        if (options.type == null) {
+            options.type = 'sf';
+        }
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            const spec = yield getSwagger(swaggerJsonPathOrUrl, cog.requestOptions);
+            if (spec == null || typeof spec !== 'object') {
+                reject(`Not found '${swaggerJsonPathOrUrl}' file or invalid download this file`);
+                return;
+            }
+            const value = options.type === 'st'
+                ? st_1.generator(spec, options, cog)
+                : sf_1.generator(spec, options, cog);
+            resolve({ spec, value });
+        }));
+    });
+}
+exports.generator = generator;

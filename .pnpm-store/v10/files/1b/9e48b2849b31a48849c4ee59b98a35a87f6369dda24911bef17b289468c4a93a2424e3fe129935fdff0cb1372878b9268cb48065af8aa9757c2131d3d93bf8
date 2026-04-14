@@ -1,0 +1,21 @@
+import * as i0 from "@angular/core";
+import * as i1 from "./components/query-builder.component";
+import * as i2 from "./directives/query-input.directive";
+import * as i3 from "./directives/query-operator.directive";
+import * as i4 from "./directives/query-field.directive";
+import * as i5 from "./directives/query-entity.directive";
+import * as i6 from "./directives/query-button-group.directive";
+import * as i7 from "./directives/query-switch-group.directive";
+import * as i8 from "./directives/query-ruleset-add-rule-button.directive";
+import * as i9 from "./directives/query-ruleset-add-ruleset-button.directive";
+import * as i10 from "./directives/query-ruleset-remove-button.directive";
+import * as i11 from "./directives/query-rule-remove-button.directive";
+import * as i12 from "./directives/query-empty-warning.directive";
+import * as i13 from "./directives/query-arrow-icon.directive";
+import * as i14 from "@angular/common";
+import * as i15 from "@angular/forms";
+export declare class QueryBuilderModule {
+    static ɵfac: i0.ɵɵFactoryDeclaration<QueryBuilderModule, never>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<QueryBuilderModule, [typeof i1.QueryBuilderComponent, typeof i2.QueryInputDirective, typeof i3.QueryOperatorDirective, typeof i4.QueryFieldDirective, typeof i5.QueryEntityDirective, typeof i6.QueryButtonGroupDirective, typeof i7.QuerySwitchGroupDirective, typeof i8.QueryRulesetAddRuleButtonDirective, typeof i9.QueryRulesetAddRulesetButtonDirective, typeof i10.QueryRulesetRemoveButtonDirective, typeof i11.QueryRuleRemoveButtonDirective, typeof i12.QueryEmptyWarningDirective, typeof i13.QueryArrowIconDirective], [typeof i14.CommonModule, typeof i15.FormsModule], [typeof i1.QueryBuilderComponent, typeof i2.QueryInputDirective, typeof i3.QueryOperatorDirective, typeof i4.QueryFieldDirective, typeof i5.QueryEntityDirective, typeof i6.QueryButtonGroupDirective, typeof i7.QuerySwitchGroupDirective, typeof i8.QueryRulesetAddRuleButtonDirective, typeof i9.QueryRulesetAddRulesetButtonDirective, typeof i10.QueryRulesetRemoveButtonDirective, typeof i11.QueryRuleRemoveButtonDirective, typeof i12.QueryEmptyWarningDirective, typeof i13.QueryArrowIconDirective]>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<QueryBuilderModule>;
+}

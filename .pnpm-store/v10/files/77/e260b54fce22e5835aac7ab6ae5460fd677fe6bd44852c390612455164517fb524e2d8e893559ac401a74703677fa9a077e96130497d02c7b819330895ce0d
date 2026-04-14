@@ -1,0 +1,119 @@
+@import '../../../theme/theme-default.less';
+@notice-icon-prefix: ~'.notice-icon';
+
+@{notice-icon-prefix} {
+  width: 336px;
+
+  &__btn {
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.3s;
+  }
+
+  .@{ant-prefix}-popover-inner-content {
+    padding: 0;
+  }
+  .@{ant-prefix}-tabs {
+    &-bar {
+      margin-bottom: 4px;
+    }
+  }
+
+  &__tab-left {
+    .@{ant-prefix}-tabs-nav-list {
+      .@{ant-prefix}-tabs-tab:first-child {
+        margin-left: @tabs-horizontal-gutter;
+      }
+    }
+  }
+
+  .@{ant-prefix}-list {
+    overflow: auto;
+    max-height: 400px;
+
+    &-item {
+      cursor: pointer;
+      overflow: hidden;
+      padding-right: 24px;
+      padding-left: 24px;
+      transition: all 0.3s;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover {
+        background: @primary-1;
+      }
+
+      &-meta {
+        width: 100%;
+
+        &-title {
+          margin-bottom: 8px;
+          font-weight: normal;
+        }
+      }
+      .@{ant-prefix}-avatar {
+        margin-top: 4px;
+        background: #fff;
+      }
+    }
+  }
+
+  &__notfound {
+    padding: 73px 0 88px;
+    color: @text-color-secondary;
+    text-align: center;
+
+    &-img {
+      display: inline-block;
+      height: 76px;
+      margin-bottom: 16px;
+    }
+  }
+
+  &__clear {
+    cursor: pointer;
+    height: 46px;
+    line-height: 46px;
+    color: @text-color;
+    text-align: center;
+    border-top: 1px solid @border-color-split;
+    border-radius: 0 0 @border-radius-base @border-radius-base;
+    transition: all 0.3s;
+
+    &:hover {
+      color: @heading-color;
+    }
+  }
+
+  &__item {
+    .@{ant-prefix}-badge-count {
+      top: -10px;
+    }
+
+    &-read {
+      opacity: 0.4;
+    }
+
+    &-desc {
+      font-size: 12px;
+      line-height: @line-height-base;
+    }
+
+    &-time {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: @line-height-base;
+    }
+
+    &-extra {
+      float: right;
+      margin-top: -1.5px;
+      margin-right: 0;
+      font-weight: normal;
+      color: @text-color-secondary;
+    }
+  }
+}

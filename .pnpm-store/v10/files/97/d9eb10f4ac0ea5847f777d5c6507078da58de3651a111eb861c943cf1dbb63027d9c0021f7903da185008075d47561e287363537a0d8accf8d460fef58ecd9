@@ -1,0 +1,6 @@
+import { InViewportDirection } from '../enums';
+export declare class Direction {
+    #private;
+    get value(): `${InViewportDirection}`;
+    constructor(value?: `${InViewportDirection}`);
+}

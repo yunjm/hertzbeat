@@ -1,0 +1,48 @@
+{
+  "name": "@delon/mock",
+  "version": "17.3.1",
+  "author": "cipchk<cipchk@qq.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-alain/delon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ng-alain/ng-alain/issues"
+  },
+  "homepage": "https://ng-alain.com",
+  "keywords": [
+    "delon",
+    "ng-alain",
+    "alain",
+    "mock",
+    "mockjs",
+    "angular-mock",
+    "ng mock",
+    "ngx-mock",
+    "antd",
+    "ng-zorro-antd",
+    "angular",
+    "component"
+  ],
+  "dependencies": {
+    "mockjs": "^1.1.0",
+    "@types/mockjs": "^1.0.10",
+    "@delon/util": "^17.3.1",
+    "tslib": "^2.3.0"
+  },
+  "module": "fesm2022/mock.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "esm2022": "./esm2022/mock.mjs",
+      "esm": "./esm2022/mock.mjs",
+      "default": "./fesm2022/mock.mjs"
+    }
+  },
+  "sideEffects": false
+}

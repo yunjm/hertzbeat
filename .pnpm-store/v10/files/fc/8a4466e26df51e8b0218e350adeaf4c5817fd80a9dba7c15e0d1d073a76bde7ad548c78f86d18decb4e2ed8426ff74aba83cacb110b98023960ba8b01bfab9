@@ -1,0 +1,20 @@
+import { InViewportDirection } from '../enums';
+import { InViewportCheckFn } from './check-fn';
+export declare const checkFnId: unique symbol;
+export declare const configHash: unique symbol;
+export declare class Config {
+    #private;
+    get root(): Element | null;
+    get rootMargin(): string;
+    get threshold(): readonly number[];
+    get partial(): boolean;
+    get direction(): `${InViewportDirection}`;
+    get checkFn(): InViewportCheckFn | undefined;
+    get [checkFnId](): string;
+    get [configHash](): string;
+    constructor(options?: (IntersectionObserverInit & {
+        partial?: boolean;
+        direction?: `${InViewportDirection}`;
+        checkFn?: InViewportCheckFn;
+    }) | null | undefined);
+}

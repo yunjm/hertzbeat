@@ -1,0 +1,157 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const util_1 = require("./util");
+function coverColumns(options) {
+    const res = [];
+    const eachCallback = options.config.st.propertyCallback;
+    const inFn = (schema, parentSchema) => {
+        const properties = schema.properties;
+        Object.keys(properties).forEach(propertyName => {
+            const property = properties[propertyName];
+            const column = propertyToColumn(propertyName, property, options);
+            Object.assign(column, util_1.getCustomProperty('st', propertyName, options));
+            res.push(column);
+            if (eachCallback) {
+                eachCallback({
+                    name: propertyName,
+                    property,
+                    column,
+                    path: options.path,
+                    method: options.method,
+                });
+            }
+        });
+    };
+    inFn(options.schema);
+    return res;
+}
+function propertyToColumn(name, property, options) {
+    const res = {
+        title: getTitle(name, property, options) || name,
+        index: getIndex(name, property, options),
+    };
+    const _type = getType(name, property, options);
+    if (_type != null) {
+        res.type = _type;
+    }
+    fixEnum(res, name, property, options);
+    fixXml(res, name, property, options);
+    return res;
+}
+function getTitle(name, property, options) {
+    if (property.title != null) {
+        return property.title;
+    }
+    const defaultTitle = options.config.propertyMapNames[name];
+    if (defaultTitle) {
+        property.title = defaultTitle;
+    }
+    if (property.title == null &&
+        property.description != null &&
+        property.description.length > 0 &&
+        options.config.descriptionIsTitle === true) {
+        property.title = property.description;
+    }
+    return property.title;
+}
+function getType(name, property, options) {
+    switch (property.type) {
+        case 'integer':
+        case 'number':
+            if (name === 'id') {
+                return null;
+            }
+            return 'number';
+        case 'boolean':
+            return 'yn';
+        case 'string':
+            switch (property.format) {
+                case 'date':
+                case 'date-time':
+                    return 'date';
+            }
+            break;
+    }
+    const nameByType = options.config.st.nameToType[name];
+    if (nameByType) {
+        return nameByType;
+    }
+    return null;
+}
+function getIndex(name, property, options) {
+    if (property.$ref && property.$ref.length > 0) {
+        return [
+            name,
+            ...getDeepIndex(property, options.schema.definitions),
+        ].join('.');
+    }
+    return name;
+}
+function getDeepIndex(property, definitions) {
+    const res = [];
+    const inFn = (p) => {
+        if (!p || p.type !== 'object' || !p.properties || Object.keys(p.properties).length === 0) {
+            return;
+        }
+        const validKeys = Object.keys(p.properties).filter(w => w !== 'id');
+        res.push(validKeys.length > 0 ? validKeys[0] : Object.keys(p.properties)[0]);
+    };
+    const subProperty = util_1.findSchemaDefinition(property.$ref, definitions);
+    inFn(subProperty);
+    return res;
+}
+function fixEnum(column, name, property, options) {
+    return;
+}
+function fixXml(column, name, property, options) {
+    const names = options.config.st.xmlBlackNames;
+    if (!property.xml || !names || names.length === 0) {
+        return;
+    }
+    names.forEach(key => {
+        const value = property.xml[key];
+        if (typeof value === 'undefined')
+            return;
+        column[key] = value;
+    });
+}
+function generator(data, options, config) {
+    const path = `${config.pathPrefix || ''}${options.path}`;
+    const method = options.method || config.st.method || 'get';
+    const pathObj = data.paths[path];
+    if (pathObj == null || pathObj[method] == null) {
+        console.warn(`Not found method [${method}] or [${path}]`);
+        return null;
+    }
+    const oper = pathObj[method];
+    if (!oper.responses || !oper.responses['200']) {
+        console.warn(`Not found 200 response in [${path},${method}]`);
+        return null;
+    }
+    const successResponse = oper.responses['200'];
+    if (!successResponse || !successResponse.schema || successResponse.schema.type !== 'array') {
+        console.warn(`Type muse be array schema in [${path},${method},200]`);
+        return null;
+    }
+    const schema = util_1.findSchemaDefinition(successResponse.schema.items.$ref, data.definitions);
+    if (schema == null) {
+        return null;
+    }
+    const otherDefinitions = util_1.mergeDefinitions(schema, data.definitions);
+    if (Object.keys(otherDefinitions).length > 0) {
+        schema.definitions = otherDefinitions;
+    }
+    const runOpt = {
+        path,
+        method,
+        config,
+        schema,
+    };
+    const columns = coverColumns(runOpt);
+    const finishedCallback = config.st.finishedCallback;
+    if (finishedCallback) {
+        finishedCallback({ columns, path, method });
+    }
+    return columns;
+}
+exports.generator = generator;

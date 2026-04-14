@@ -1,0 +1,88 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, } from '@angular/forms';
+import { QueryBuilderComponent } from './components/query-builder.component';
+import { QueryArrowIconDirective } from './directives/query-arrow-icon.directive';
+import { QueryFieldDirective } from './directives/query-field.directive';
+import { QueryInputDirective } from './directives/query-input.directive';
+import { QueryEntityDirective } from './directives/query-entity.directive';
+import { QueryOperatorDirective } from './directives/query-operator.directive';
+import { QueryButtonGroupDirective } from './directives/query-button-group.directive';
+import { QuerySwitchGroupDirective } from './directives/query-switch-group.directive';
+import { QueryRulesetAddRuleButtonDirective } from './directives/query-ruleset-add-rule-button.directive';
+import { QueryRulesetAddRulesetButtonDirective } from './directives/query-ruleset-add-ruleset-button.directive';
+import { QueryRulesetRemoveButtonDirective } from './directives/query-ruleset-remove-button.directive';
+import { QueryRuleRemoveButtonDirective } from './directives/query-rule-remove-button.directive';
+import { QueryEmptyWarningDirective } from './directives/query-empty-warning.directive';
+import * as i0 from "@angular/core";
+export class QueryBuilderModule {
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryBuilderModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+    static ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "18.1.0", ngImport: i0, type: QueryBuilderModule, declarations: [QueryBuilderComponent,
+            QueryInputDirective,
+            QueryOperatorDirective,
+            QueryFieldDirective,
+            QueryEntityDirective,
+            QueryButtonGroupDirective,
+            QuerySwitchGroupDirective,
+            QueryRulesetAddRuleButtonDirective,
+            QueryRulesetAddRulesetButtonDirective,
+            QueryRulesetRemoveButtonDirective,
+            QueryRuleRemoveButtonDirective,
+            QueryEmptyWarningDirective,
+            QueryArrowIconDirective], imports: [CommonModule,
+            FormsModule], exports: [QueryBuilderComponent,
+            QueryInputDirective,
+            QueryOperatorDirective,
+            QueryFieldDirective,
+            QueryEntityDirective,
+            QueryButtonGroupDirective,
+            QuerySwitchGroupDirective,
+            QueryRulesetAddRuleButtonDirective,
+            QueryRulesetAddRulesetButtonDirective,
+            QueryRulesetRemoveButtonDirective,
+            QueryRuleRemoveButtonDirective,
+            QueryEmptyWarningDirective,
+            QueryArrowIconDirective] });
+    static ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryBuilderModule, imports: [CommonModule,
+            FormsModule] });
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryBuilderModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [
+                        CommonModule,
+                        FormsModule
+                    ],
+                    declarations: [
+                        QueryBuilderComponent,
+                        QueryInputDirective,
+                        QueryOperatorDirective,
+                        QueryFieldDirective,
+                        QueryEntityDirective,
+                        QueryButtonGroupDirective,
+                        QuerySwitchGroupDirective,
+                        QueryRulesetAddRuleButtonDirective,
+                        QueryRulesetAddRulesetButtonDirective,
+                        QueryRulesetRemoveButtonDirective,
+                        QueryRuleRemoveButtonDirective,
+                        QueryEmptyWarningDirective,
+                        QueryArrowIconDirective
+                    ],
+                    exports: [
+                        QueryBuilderComponent,
+                        QueryInputDirective,
+                        QueryOperatorDirective,
+                        QueryFieldDirective,
+                        QueryEntityDirective,
+                        QueryButtonGroupDirective,
+                        QuerySwitchGroupDirective,
+                        QueryRulesetAddRuleButtonDirective,
+                        QueryRulesetAddRulesetButtonDirective,
+                        QueryRulesetRemoveButtonDirective,
+                        QueryRuleRemoveButtonDirective,
+                        QueryEmptyWarningDirective,
+                        QueryArrowIconDirective
+                    ]
+                }]
+        }] });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicXVlcnktYnVpbGRlci5tb2R1bGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi9wcm9qZWN0cy9uZ3gtcXVlcnktYnVpbGRlci9zcmMvbGliL3F1ZXJ5LWJ1aWxkZXIubW9kdWxlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxRQUFRLEVBQUUsTUFBTSxlQUFlLENBQUM7QUFDekMsT0FBTyxFQUFFLFlBQVksRUFBRSxNQUFNLGlCQUFpQixDQUFDO0FBQy9DLE9BQU8sRUFBRSxXQUFXLEdBQUcsTUFBTSxnQkFBZ0IsQ0FBQztBQUU5QyxPQUFPLEVBQUUscUJBQXFCLEVBQUUsTUFBTSxzQ0FBc0MsQ0FBQztBQUU3RSxPQUFPLEVBQUUsdUJBQXVCLEVBQUUsTUFBTSx5Q0FBeUMsQ0FBQztBQUNsRixPQUFPLEVBQUUsbUJBQW1CLEVBQUUsTUFBTSxvQ0FBb0MsQ0FBQztBQUN6RSxPQUFPLEVBQUUsbUJBQW1CLEVBQUUsTUFBTSxvQ0FBb0MsQ0FBQztBQUN6RSxPQUFPLEVBQUUsb0JBQW9CLEVBQUUsTUFBTSxxQ0FBcUMsQ0FBQztBQUMzRSxPQUFPLEVBQUUsc0JBQXNCLEVBQUUsTUFBTSx1Q0FBdUMsQ0FBQztBQUMvRSxPQUFPLEVBQUUseUJBQXlCLEVBQUUsTUFBTSwyQ0FBMkMsQ0FBQztBQUN0RixPQUFPLEVBQUUseUJBQXlCLEVBQUUsTUFBTSwyQ0FBMkMsQ0FBQztBQUN0RixPQUFPLEVBQUUsa0NBQWtDLEVBQUUsTUFBTSxzREFBc0QsQ0FBQztBQUMxRyxPQUFPLEVBQUUscUNBQXFDLEVBQUUsTUFBTSx5REFBeUQsQ0FBQztBQUNoSCxPQUFPLEVBQUUsaUNBQWlDLEVBQUUsTUFBTSxvREFBb0QsQ0FBQztBQUN2RyxPQUFPLEVBQUUsOEJBQThCLEVBQUUsTUFBTSxpREFBaUQsQ0FBQztBQUNqRyxPQUFPLEVBQUUsMEJBQTBCLEVBQUUsTUFBTSw0Q0FBNEMsQ0FBQzs7QUFzQ3hGLE1BQU0sT0FBTyxrQkFBa0I7dUdBQWxCLGtCQUFrQjt3R0FBbEIsa0JBQWtCLGlCQTlCM0IscUJBQXFCO1lBQ3JCLG1CQUFtQjtZQUNuQixzQkFBc0I7WUFDdEIsbUJBQW1CO1lBQ25CLG9CQUFvQjtZQUNwQix5QkFBeUI7WUFDekIseUJBQXlCO1lBQ3pCLGtDQUFrQztZQUNsQyxxQ0FBcUM7WUFDckMsaUNBQWlDO1lBQ2pDLDhCQUE4QjtZQUM5QiwwQkFBMEI7WUFDMUIsdUJBQXVCLGFBaEJ2QixZQUFZO1lBQ1osV0FBVyxhQWtCWCxxQkFBcUI7WUFDckIsbUJBQW1CO1lBQ25CLHNCQUFzQjtZQUN0QixtQkFBbUI7WUFDbkIsb0JBQW9CO1lBQ3BCLHlCQUF5QjtZQUN6Qix5QkFBeUI7WUFDekIsa0NBQWtDO1lBQ2xDLHFDQUFxQztZQUNyQyxpQ0FBaUM7WUFDakMsOEJBQThCO1lBQzlCLDBCQUEwQjtZQUMxQix1QkFBdUI7d0dBR2Qsa0JBQWtCLFlBbEMzQixZQUFZO1lBQ1osV0FBVzs7MkZBaUNGLGtCQUFrQjtrQkFwQzlCLFFBQVE7bUJBQUM7b0JBQ1IsT0FBTyxFQUFFO3dCQUNQLFlBQVk7d0JBQ1osV0FBVztxQkFDWjtvQkFDRCxZQUFZLEVBQUU7d0JBQ1oscUJBQXFCO3dCQUNyQixtQkFBbUI7d0JBQ25CLHNCQUFzQjt3QkFDdEIsbUJBQW1CO3dCQUNuQixvQkFBb0I7d0JBQ3BCLHlCQUF5Qjt3QkFDekIseUJBQXlCO3dCQUN6QixrQ0FBa0M7d0JBQ2xDLHFDQUFxQzt3QkFDckMsaUNBQWlDO3dCQUNqQyw4QkFBOEI7d0JBQzlCLDBCQUEwQjt3QkFDMUIsdUJBQXVCO3FCQUN4QjtvQkFDRCxPQUFPLEVBQUU7d0JBQ1AscUJBQXFCO3dCQUNyQixtQkFBbUI7d0JBQ25CLHNCQUFzQjt3QkFDdEIsbUJBQW1CO3dCQUNuQixvQkFBb0I7d0JBQ3BCLHlCQUF5Qjt3QkFDekIseUJBQXlCO3dCQUN6QixrQ0FBa0M7d0JBQ2xDLHFDQUFxQzt3QkFDckMsaUNBQWlDO3dCQUNqQyw4QkFBOEI7d0JBQzlCLDBCQUEwQjt3QkFDMUIsdUJBQXVCO3FCQUN4QjtpQkFDRiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5nTW9kdWxlIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XHJcbmltcG9ydCB7IENvbW1vbk1vZHVsZSB9IGZyb20gJ0Bhbmd1bGFyL2NvbW1vbic7XHJcbmltcG9ydCB7IEZvcm1zTW9kdWxlLCB9IGZyb20gJ0Bhbmd1bGFyL2Zvcm1zJztcclxuXHJcbmltcG9ydCB7IFF1ZXJ5QnVpbGRlckNvbXBvbmVudCB9IGZyb20gJy4vY29tcG9uZW50cy9xdWVyeS1idWlsZGVyLmNvbXBvbmVudCc7XHJcblxyXG5pbXBvcnQgeyBRdWVyeUFycm93SWNvbkRpcmVjdGl2ZSB9IGZyb20gJy4vZGlyZWN0aXZlcy9xdWVyeS1hcnJvdy1pY29uLmRpcmVjdGl2ZSc7XHJcbmltcG9ydCB7IFF1ZXJ5RmllbGREaXJlY3RpdmUgfSBmcm9tICcuL2RpcmVjdGl2ZXMvcXVlcnktZmllbGQuZGlyZWN0aXZlJztcclxuaW1wb3J0IHsgUXVlcnlJbnB1dERpcmVjdGl2ZSB9IGZyb20gJy4vZGlyZWN0aXZlcy9xdWVyeS1pbnB1dC5kaXJlY3RpdmUnO1xyXG5pbXBvcnQgeyBRdWVyeUVudGl0eURpcmVjdGl2ZSB9IGZyb20gJy4vZGlyZWN0aXZlcy9xdWVyeS1lbnRpdHkuZGlyZWN0aXZlJztcclxuaW1wb3J0IHsgUXVlcnlPcGVyYXRvckRpcmVjdGl2ZSB9IGZyb20gJy4vZGlyZWN0aXZlcy9xdWVyeS1vcGVyYXRvci5kaXJlY3RpdmUnO1xyXG5pbXBvcnQgeyBRdWVyeUJ1dHRvbkdyb3VwRGlyZWN0aXZlIH0gZnJvbSAnLi9kaXJlY3RpdmVzL3F1ZXJ5LWJ1dHRvbi1ncm91cC5kaXJlY3RpdmUnO1xyXG5pbXBvcnQgeyBRdWVyeVN3aXRjaEdyb3VwRGlyZWN0aXZlIH0gZnJvbSAnLi9kaXJlY3RpdmVzL3F1ZXJ5LXN3aXRjaC1ncm91cC5kaXJlY3RpdmUnO1xyXG5pbXBvcnQgeyBRdWVyeVJ1bGVzZXRBZGRSdWxlQnV0dG9uRGlyZWN0aXZlIH0gZnJvbSAnLi9kaXJlY3RpdmVzL3F1ZXJ5LXJ1bGVzZXQtYWRkLXJ1bGUtYnV0dG9uLmRpcmVjdGl2ZSc7XHJcbmltcG9ydCB7IFF1ZXJ5UnVsZXNldEFkZFJ1bGVzZXRCdXR0b25EaXJlY3RpdmUgfSBmcm9tICcuL2RpcmVjdGl2ZXMvcXVlcnktcnVsZXNldC1hZGQtcnVsZXNldC1idXR0b24uZGlyZWN0aXZlJztcclxuaW1wb3J0IHsgUXVlcnlSdWxlc2V0UmVtb3ZlQnV0dG9uRGlyZWN0aXZlIH0gZnJvbSAnLi9kaXJlY3RpdmVzL3F1ZXJ5LXJ1bGVzZXQtcmVtb3ZlLWJ1dHRvbi5kaXJlY3RpdmUnO1xyXG5pbXBvcnQgeyBRdWVyeVJ1bGVSZW1vdmVCdXR0b25EaXJlY3RpdmUgfSBmcm9tICcuL2RpcmVjdGl2ZXMvcXVlcnktcnVsZS1yZW1vdmUtYnV0dG9uLmRpcmVjdGl2ZSc7XHJcbmltcG9ydCB7IFF1ZXJ5RW1wdHlXYXJuaW5nRGlyZWN0aXZlIH0gZnJvbSAnLi9kaXJlY3RpdmVzL3F1ZXJ5LWVtcHR5LXdhcm5pbmcuZGlyZWN0aXZlJztcclxuXHJcbkBOZ01vZHVsZSh7XHJcbiAgaW1wb3J0czogW1xyXG4gICAgQ29tbW9uTW9kdWxlLFxyXG4gICAgRm9ybXNNb2R1bGVcclxuICBdLFxyXG4gIGRlY2xhcmF0aW9uczogW1xyXG4gICAgUXVlcnlCdWlsZGVyQ29tcG9uZW50LFxyXG4gICAgUXVlcnlJbnB1dERpcmVjdGl2ZSxcclxuICAgIFF1ZXJ5T3BlcmF0b3JEaXJlY3RpdmUsXHJcbiAgICBRdWVyeUZpZWxkRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlFbnRpdHlEaXJlY3RpdmUsXHJcbiAgICBRdWVyeUJ1dHRvbkdyb3VwRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlTd2l0Y2hHcm91cERpcmVjdGl2ZSxcclxuICAgIFF1ZXJ5UnVsZXNldEFkZFJ1bGVCdXR0b25EaXJlY3RpdmUsXHJcbiAgICBRdWVyeVJ1bGVzZXRBZGRSdWxlc2V0QnV0dG9uRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlSdWxlc2V0UmVtb3ZlQnV0dG9uRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlSdWxlUmVtb3ZlQnV0dG9uRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlFbXB0eVdhcm5pbmdEaXJlY3RpdmUsXHJcbiAgICBRdWVyeUFycm93SWNvbkRpcmVjdGl2ZVxyXG4gIF0sXHJcbiAgZXhwb3J0czogW1xyXG4gICAgUXVlcnlCdWlsZGVyQ29tcG9uZW50LFxyXG4gICAgUXVlcnlJbnB1dERpcmVjdGl2ZSxcclxuICAgIFF1ZXJ5T3BlcmF0b3JEaXJlY3RpdmUsXHJcbiAgICBRdWVyeUZpZWxkRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlFbnRpdHlEaXJlY3RpdmUsXHJcbiAgICBRdWVyeUJ1dHRvbkdyb3VwRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlTd2l0Y2hHcm91cERpcmVjdGl2ZSxcclxuICAgIFF1ZXJ5UnVsZXNldEFkZFJ1bGVCdXR0b25EaXJlY3RpdmUsXHJcbiAgICBRdWVyeVJ1bGVzZXRBZGRSdWxlc2V0QnV0dG9uRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlSdWxlc2V0UmVtb3ZlQnV0dG9uRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlSdWxlUmVtb3ZlQnV0dG9uRGlyZWN0aXZlLFxyXG4gICAgUXVlcnlFbXB0eVdhcm5pbmdEaXJlY3RpdmUsXHJcbiAgICBRdWVyeUFycm93SWNvbkRpcmVjdGl2ZVxyXG4gIF1cclxufSlcclxuZXhwb3J0IGNsYXNzIFF1ZXJ5QnVpbGRlck1vZHVsZSB7IH1cclxuIl19

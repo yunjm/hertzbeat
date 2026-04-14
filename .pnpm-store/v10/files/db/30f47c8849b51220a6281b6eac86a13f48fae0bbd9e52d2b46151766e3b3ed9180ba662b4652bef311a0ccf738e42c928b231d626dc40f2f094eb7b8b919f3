@@ -1,0 +1,28 @@
+import { Directive, Input } from '@angular/core';
+import * as i0 from "@angular/core";
+export class QueryInputDirective {
+    template;
+    /** Unique name for query input type. */
+    get queryInputType() { return this._type; }
+    set queryInputType(value) {
+        // If the directive is set without a type (updated programatically), then this setter will
+        // trigger with an empty string and should not overwrite the programatically set value.
+        if (!value) {
+            return;
+        }
+        this._type = value;
+    }
+    _type;
+    constructor(template) {
+        this.template = template;
+    }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryInputDirective, deps: [{ token: i0.TemplateRef }], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "18.1.0", type: QueryInputDirective, selector: "[queryInput]", inputs: { queryInputType: "queryInputType" }, ngImport: i0 });
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryInputDirective, decorators: [{
+            type: Directive,
+            args: [{ selector: '[queryInput]' }]
+        }], ctorParameters: () => [{ type: i0.TemplateRef }], propDecorators: { queryInputType: [{
+                type: Input
+            }] } });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicXVlcnktaW5wdXQuZGlyZWN0aXZlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbmd4LXF1ZXJ5LWJ1aWxkZXIvc3JjL2xpYi9kaXJlY3RpdmVzL3F1ZXJ5LWlucHV0LmRpcmVjdGl2ZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxPQUFPLEVBQUUsU0FBUyxFQUFFLEtBQUssRUFBZSxNQUFNLGVBQWUsQ0FBQzs7QUFHOUQsTUFBTSxPQUFPLG1CQUFtQjtJQVlYO0lBWG5CLHdDQUF3QztJQUN4QyxJQUNJLGNBQWMsS0FBYSxPQUFPLElBQUksQ0FBQyxLQUFLLENBQUMsQ0FBQyxDQUFDO0lBQ25ELElBQUksY0FBYyxDQUFDLEtBQWE7UUFDOUIsMEZBQTBGO1FBQzFGLHVGQUF1RjtRQUN2RixJQUFJLENBQUMsS0FBSyxFQUFFLENBQUM7WUFBQyxPQUFPO1FBQUMsQ0FBQztRQUN2QixJQUFJLENBQUMsS0FBSyxHQUFHLEtBQUssQ0FBQztJQUNyQixDQUFDO0lBQ08sS0FBSyxDQUFVO0lBRXZCLFlBQW1CLFFBQTBCO1FBQTFCLGFBQVEsR0FBUixRQUFRLENBQWtCO0lBQUcsQ0FBQzt1R0FadEMsbUJBQW1COzJGQUFuQixtQkFBbUI7OzJGQUFuQixtQkFBbUI7a0JBRC9CLFNBQVM7bUJBQUMsRUFBQyxRQUFRLEVBQUUsY0FBYyxFQUFDO2dGQUkvQixjQUFjO3NCQURqQixLQUFLIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgRGlyZWN0aXZlLCBJbnB1dCwgVGVtcGxhdGVSZWYgfSBmcm9tICdAYW5ndWxhci9jb3JlJztcblxuQERpcmVjdGl2ZSh7c2VsZWN0b3I6ICdbcXVlcnlJbnB1dF0nfSlcbmV4cG9ydCBjbGFzcyBRdWVyeUlucHV0RGlyZWN0aXZlIHtcbiAgLyoqIFVuaXF1ZSBuYW1lIGZvciBxdWVyeSBpbnB1dCB0eXBlLiAqL1xuICBASW5wdXQoKVxuICBnZXQgcXVlcnlJbnB1dFR5cGUoKTogc3RyaW5nIHsgcmV0dXJuIHRoaXMuX3R5cGU7IH1cbiAgc2V0IHF1ZXJ5SW5wdXRUeXBlKHZhbHVlOiBzdHJpbmcpIHtcbiAgICAvLyBJZiB0aGUgZGlyZWN0aXZlIGlzIHNldCB3aXRob3V0IGEgdHlwZSAodXBkYXRlZCBwcm9ncmFtYXRpY2FsbHkpLCB0aGVuIHRoaXMgc2V0dGVyIHdpbGxcbiAgICAvLyB0cmlnZ2VyIHdpdGggYW4gZW1wdHkgc3RyaW5nIGFuZCBzaG91bGQgbm90IG92ZXJ3cml0ZSB0aGUgcHJvZ3JhbWF0aWNhbGx5IHNldCB2YWx1ZS5cbiAgICBpZiAoIXZhbHVlKSB7IHJldHVybjsgfVxuICAgIHRoaXMuX3R5cGUgPSB2YWx1ZTtcbiAgfVxuICBwcml2YXRlIF90eXBlITogc3RyaW5nO1xuXG4gIGNvbnN0cnVjdG9yKHB1YmxpYyB0ZW1wbGF0ZTogVGVtcGxhdGVSZWY8YW55Pikge31cbn1cbiJdfQ==

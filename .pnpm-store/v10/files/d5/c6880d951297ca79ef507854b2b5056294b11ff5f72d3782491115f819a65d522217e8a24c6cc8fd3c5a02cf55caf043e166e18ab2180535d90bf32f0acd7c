@@ -1,0 +1,41 @@
+@import '../../../theme/theme-default.less';
+@quick-menu-prefix: ~'.quick-menu';
+
+@{quick-menu-prefix} {
+  position: fixed;
+  z-index: @zindex + 2;
+  right: -@quick-menu-border-width;
+  left: auto;
+  display: block;
+  backface-visibility: hidden;
+  transition: margin 0.3s cubic-bezier(1, 0, 0, 1);
+
+  &,
+  &__ctrl {
+    background-color: @quick-menu-bg;
+    border: @quick-menu-border-width solid @quick-menu-border-color;
+    box-shadow: @shadow-1-down;
+  }
+
+  &__inner {
+    position: relative;
+    padding: 0 12px;
+  }
+
+  &__ctrl {
+    cursor: pointer;
+    position: absolute;
+    top: -1px;
+    left: -@quick-menu-ctrl-hw;
+    width: @quick-menu-ctrl-hw;
+    height: @quick-menu-ctrl-hw;
+    text-align: center;
+    border-right: 0;
+    border-radius: 3px 0 0 3px;
+
+    &-icon {
+      font-size: 20px;
+      line-height: @quick-menu-ctrl-hw - 1;
+    }
+  }
+}

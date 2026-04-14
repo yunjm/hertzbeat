@@ -1,0 +1,152 @@
+import { Schema, Spec } from 'swagger-schema-official';
+export declare type GenType = 'sf' | 'st';
+export interface Options {
+    type?: GenType;
+    path: string;
+    method?: string;
+}
+export declare const CONFIG: Config;
+export interface Config {
+    requestOptions?: any;
+    pathPrefix?: string;
+    propertyMapNames?: {
+        [name: string]: string;
+    };
+    descriptionIsTitle?: boolean;
+    sf?: SFConfig;
+    st?: STConfig;
+}
+export interface Result {
+    spec: Spec;
+    value: ResultValue | ResultValue[] | null;
+}
+export interface ResultValue {
+    [key: string]: any;
+}
+export interface PathConfig {
+    name: string;
+    path?: string;
+    value?: SFSchema | STColumn;
+}
+export interface SFPropertyCallbackOptions {
+    name: string;
+    property: Schema;
+    path: string;
+    method: string;
+}
+export interface SFFinishedCallbackOptions {
+    schema: Schema;
+    path: string;
+    method: string;
+}
+export interface SFConfig {
+    method?: string;
+    singleArray?: SFSchema;
+    properties?: PathConfig[];
+    xmlBlackNames?: string[];
+    propertyCallback?: (optinos: SFPropertyCallbackOptions) => void;
+    finishedCallback?: (options: SFFinishedCallbackOptions) => void;
+}
+export interface STPropertyCallbackOptions {
+    name: string;
+    property: Schema;
+    column: STColumn;
+    path: string;
+    method: string;
+}
+export interface STFinishedCallbackOptions {
+    columns: STColumn[];
+    path: string;
+    method: string;
+}
+export interface STConfig {
+    method?: string;
+    properties?: PathConfig[];
+    nameToType?: {
+        [name: string]: STColumnType;
+    };
+    xmlBlackNames?: string[];
+    propertyCallback?: (optinos: STPropertyCallbackOptions) => void;
+    finishedCallback?: (options: STFinishedCallbackOptions) => void;
+}
+export interface RunOptions {
+    path: string;
+    method: string;
+    config: Config;
+    schema: FullSchema;
+}
+export interface SFSchema {
+    [key: string]: any;
+    minimum?: number;
+    exclusiveMinimum?: boolean;
+    maximum?: number;
+    exclusiveMaximum?: boolean;
+    multipleOf?: number;
+    maxLength?: number;
+    minLength?: number;
+    pattern?: string;
+    items?: SFSchema;
+    minItems?: number;
+    maxItems?: number;
+    uniqueItems?: boolean;
+    maxProperties?: number;
+    minProperties?: number;
+    required?: string[];
+    properties?: {
+        [key: string]: SFSchema;
+    };
+    format?: string;
+    title?: string;
+    description?: string;
+    default?: any;
+    readOnly?: boolean;
+    ui?: any;
+}
+export interface FullSchema extends Schema {
+    definitions?: FullSchemaDefinition;
+    ui?: {
+        [key: string]: any;
+    };
+}
+export interface FullSchemaDefinition {
+    [definitionsName: string]: FullSchema;
+}
+export declare type STColumnType = 'checkbox' | 'link' | 'badge' | 'tag' | 'radio' | 'img' | 'currency' | 'number' | 'date' | 'yn' | 'no';
+export interface STColumn {
+    [key: string]: any;
+    key?: string;
+    title: string;
+    i18n?: string;
+    index?: string | string[];
+    type?: STColumnType;
+    buttons?: Array<{
+        [key: string]: any;
+    }>;
+    numberDigits?: string;
+    dateFormat?: string;
+    yn?: STColumnYn;
+    default?: string;
+    badge?: STColumnBadge;
+    tag?: STColumnTag;
+}
+export interface STColumnYn {
+    truth?: any;
+    yes?: string;
+    no?: string;
+}
+export interface STColumnBadge {
+    [key: number]: STColumnBadgeValue;
+    [key: string]: STColumnBadgeValue;
+}
+export interface STColumnBadgeValue {
+    text?: string;
+    color?: 'success' | 'processing' | 'default' | 'error' | 'warning';
+}
+export interface STColumnTag {
+    [key: number]: STColumnTagValue;
+    [key: string]: STColumnTagValue;
+}
+export interface STColumnTagValue {
+    text?: string;
+    color?: 'geekblue' | 'blue' | 'purple' | 'success' | 'red' | 'volcano' | 'orange' | 'gold' | 'lime' | 'green' | 'cyan' | string;
+}

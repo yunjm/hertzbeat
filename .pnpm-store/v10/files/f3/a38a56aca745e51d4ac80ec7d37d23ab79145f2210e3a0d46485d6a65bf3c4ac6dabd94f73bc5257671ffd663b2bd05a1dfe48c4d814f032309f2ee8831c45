@@ -1,0 +1,15 @@
+import { Directive } from '@angular/core';
+import * as i0 from "@angular/core";
+export class QueryEntityDirective {
+    template;
+    constructor(template) {
+        this.template = template;
+    }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryEntityDirective, deps: [{ token: i0.TemplateRef }], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "18.1.0", type: QueryEntityDirective, selector: "[queryEntity]", ngImport: i0 });
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.1.0", ngImport: i0, type: QueryEntityDirective, decorators: [{
+            type: Directive,
+            args: [{ selector: '[queryEntity]' }]
+        }], ctorParameters: () => [{ type: i0.TemplateRef }] });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicXVlcnktZW50aXR5LmRpcmVjdGl2ZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL3Byb2plY3RzL25neC1xdWVyeS1idWlsZGVyL3NyYy9saWIvZGlyZWN0aXZlcy9xdWVyeS1lbnRpdHkuZGlyZWN0aXZlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxTQUFTLEVBQWUsTUFBTSxlQUFlLENBQUM7O0FBR3ZELE1BQU0sT0FBTyxvQkFBb0I7SUFDWjtJQUFuQixZQUFtQixRQUEwQjtRQUExQixhQUFRLEdBQVIsUUFBUSxDQUFrQjtJQUFHLENBQUM7dUdBRHRDLG9CQUFvQjsyRkFBcEIsb0JBQW9COzsyRkFBcEIsb0JBQW9CO2tCQURoQyxTQUFTO21CQUFDLEVBQUMsUUFBUSxFQUFFLGVBQWUsRUFBQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IERpcmVjdGl2ZSwgVGVtcGxhdGVSZWYgfSBmcm9tICdAYW5ndWxhci9jb3JlJztcblxuQERpcmVjdGl2ZSh7c2VsZWN0b3I6ICdbcXVlcnlFbnRpdHldJ30pXG5leHBvcnQgY2xhc3MgUXVlcnlFbnRpdHlEaXJlY3RpdmUge1xuICBjb25zdHJ1Y3RvcihwdWJsaWMgdGVtcGxhdGU6IFRlbXBsYXRlUmVmPGFueT4pIHt9XG59XG4iXX0=

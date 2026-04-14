@@ -1,0 +1,7 @@
+export var InViewportDirection;
+(function (InViewportDirection) {
+    InViewportDirection["BOTH"] = "both";
+    InViewportDirection["VERTICAL"] = "vertical";
+    InViewportDirection["HORIZONTAL"] = "horizontal";
+})(InViewportDirection || (InViewportDirection = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW4tdmlld3BvcnQtZGlyZWN0aW9uLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbmctaW4tdmlld3BvcnQvc3JjL2xpYi9lbnVtcy9pbi12aWV3cG9ydC1kaXJlY3Rpb24udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsTUFBTSxDQUFOLElBQVksbUJBSVg7QUFKRCxXQUFZLG1CQUFtQjtJQUM3QixvQ0FBYSxDQUFBO0lBQ2IsNENBQXFCLENBQUE7SUFDckIsZ0RBQXlCLENBQUE7QUFDM0IsQ0FBQyxFQUpXLG1CQUFtQixLQUFuQixtQkFBbUIsUUFJOUIiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZW51bSBJblZpZXdwb3J0RGlyZWN0aW9uIHtcbiAgQk9USCA9ICdib3RoJyxcbiAgVkVSVElDQUwgPSAndmVydGljYWwnLFxuICBIT1JJWk9OVEFMID0gJ2hvcml6b250YWwnLFxufVxuIl19

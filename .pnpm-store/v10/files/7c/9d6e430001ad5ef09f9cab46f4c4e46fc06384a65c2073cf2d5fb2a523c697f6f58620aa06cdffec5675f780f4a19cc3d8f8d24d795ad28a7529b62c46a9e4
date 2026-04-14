@@ -1,0 +1,39 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CONFIG = {
+    pathPrefix: '',
+    descriptionIsTitle: true,
+    propertyMapNames: {
+        id: '编号',
+        name: '名称',
+        email: '邮箱',
+        status: '状态',
+    },
+    sf: {
+        method: 'put',
+        singleArray: {
+            type: 'string',
+            ui: {
+                widget: 'select',
+                mode: 'tags',
+            },
+            default: null,
+        },
+        properties: [],
+    },
+    st: {
+        method: 'get',
+        nameToType: {
+            price: 'currency',
+            amount: 'currency',
+            num: 'number',
+            count: 'number',
+            avatar: 'img',
+            mp: 'img',
+            modified: 'date',
+            created: 'date',
+        },
+        xmlBlackNames: ['i18n'],
+        properties: [],
+    },
+};

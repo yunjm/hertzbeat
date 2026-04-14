@@ -1,0 +1,33 @@
+@import '../../../theme/theme-default.less';
+@ellipsis-prefix: ~'.ellipsis';
+
+ellipsis {
+  display: inline;
+}
+
+@{ellipsis-prefix} {
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+  word-break: break-all;
+
+  &__lines {
+    position: relative;
+  }
+
+  &__line-clamp {
+    position: relative;
+    overflow: hidden;
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    display: -webkit-box;
+    text-overflow: ellipsis;
+  }
+
+  &__shadow {
+    position: absolute;
+    z-index: -999;
+    display: block;
+    color: transparent;
+    opacity: 0;
+  }
+}

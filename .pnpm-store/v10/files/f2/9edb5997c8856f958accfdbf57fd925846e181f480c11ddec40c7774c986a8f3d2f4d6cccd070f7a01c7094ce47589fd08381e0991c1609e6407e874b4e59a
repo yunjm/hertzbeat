@@ -1,0 +1,12 @@
+@{error-collect-prefix}-rtl {
+  direction: rtl;
+  padding-right: 0;
+  padding-left: 24px;
+
+  @{error-collect-prefix} {
+    &__count {
+      padding-right: 8px;
+      padding-left: 0;
+    }
+  }
+}

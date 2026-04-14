@@ -1,0 +1,111 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const extend_1 = __importDefault(require("extend"));
+const refPrefix = `#/definitions/`;
+function getDefinitionName(ref) {
+    return ref.substr(refPrefix.length);
+}
+exports.getDefinitionName = getDefinitionName;
+function removeXml(property) {
+    delete property.xml;
+}
+exports.removeXml = removeXml;
+function getCustomProperty(type, name, options) {
+    const cog = type === 'st' ? options.config.st : options.config.sf;
+    const ls = cog.properties.filter(w => w.name === name);
+    if (ls.length === 0) {
+        return null;
+    }
+    const pathLs = ls.filter(w => !!w.path && w.path === options.path);
+    if (pathLs.length > 0) {
+        return pathLs[0].value;
+    }
+    return ls[0].value;
+}
+exports.getCustomProperty = getCustomProperty;
+function findSchemaDefinition($ref, definitions) {
+    const match = /^#\/definitions\/(.*)$/.exec($ref);
+    if (match && match[1]) {
+        const parts = match[1].split('/');
+        let current = definitions;
+        for (let part of parts) {
+            part = part.replace(/~1/g, '/').replace(/~0/g, '~');
+            if (current.hasOwnProperty(part)) {
+                current = current[part];
+            }
+            else {
+                console.error(`Could not find a definition for ${$ref}.`);
+                return null;
+            }
+        }
+        return current;
+    }
+    console.error(`Could not find a definition for ${$ref}.`);
+    return null;
+}
+exports.findSchemaDefinition = findSchemaDefinition;
+function mergeDefinitions(schema, definitions) {
+    const res = {};
+    deepEach(schema, (key, value) => {
+        if (key === '$ref') {
+            res[getDefinitionName(value)] = findSchemaDefinition(value, definitions);
+        }
+    });
+    return res;
+}
+exports.mergeDefinitions = mergeDefinitions;
+function deepEach(obj, cb) {
+    const inFn = (o) => {
+        Object.keys(o).forEach(key => {
+            if (typeof o[key] === 'object') {
+                inFn(o[key]);
+            }
+            else {
+                cb(key, o[key]);
+            }
+        });
+    };
+    inFn(obj);
+}
+exports.deepEach = deepEach;
+function deepCopy(obj) {
+    const result = extend_1.default(true, {}, { _: obj });
+    return result._;
+}
+exports.deepCopy = deepCopy;
+function deepMergeKey(original, ingoreArray, ...objects) {
+    if (Array.isArray(original) || typeof original !== 'object')
+        return original;
+    const isObject = (v) => typeof v === 'object' || typeof v === 'function';
+    const merge = (target, obj) => {
+        Object.keys(obj)
+            .filter(key => key !== '__proto__' && Object.prototype.hasOwnProperty.call(obj, key))
+            .forEach(key => {
+            const oldValue = obj[key];
+            const newValue = target[key];
+            if (!ingoreArray && Array.isArray(newValue)) {
+                target[key] = [...newValue, ...oldValue];
+            }
+            else if (oldValue != null &&
+                isObject(oldValue) &&
+                newValue != null &&
+                isObject(newValue)) {
+                target[key] = merge(newValue, oldValue);
+            }
+            else {
+                target[key] = deepCopy(oldValue);
+            }
+        });
+        return target;
+    };
+    objects.filter(v => isObject(v)).forEach(v => merge(original, v));
+    return original;
+}
+exports.deepMergeKey = deepMergeKey;
+function deepMerge(original, ...objects) {
+    return deepMergeKey(original, false, ...objects);
+}
+exports.deepMerge = deepMerge;
