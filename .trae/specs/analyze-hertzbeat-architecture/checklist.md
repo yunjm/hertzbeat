@@ -1,0 +1,7 @@
+- [x] 详细说明了 HertzBeat 的无侵入数据采集（Agentless）原理（涵盖 `hertzbeat-collector` 和 YAML 模板机制）
+- [x] 解析了监控任务的配置管理与调度（`hertzbeat-manager` 的作用）
+- [x] 阐述了告警规则计算和通知分发机制（`hertzbeat-alerter`）
+- [x] 说明了实时（Redis/内存）和历史数据（TSDB 等）的存储方案（`hertzbeat-warehouse`）
+- [x] 解释了 Manager 与 Collector 集群通信的底层原理（`hertzbeat-remoting` 与 Netty）
+- [x] 解析了主动推送与日志接入功能（`hertzbeat-push`, `hertzbeat-log` 等）
+- [x] 输出了一份连贯、清晰的中文技术解析报告给用户
