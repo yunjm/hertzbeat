@@ -48,7 +48,36 @@
 - **THEN** 引擎组装该时间段的日志上下文，异步调用平台现有的“智能体管理”模块 API 进行根因分析。
 - **THEN** 智能体返回分析结论后，引擎将原始告警信息与 AI 诊断结论合并，推送至企微/钉钉/邮件，并在前端告警中心展示。
 
-## 5. 移除/替换的原始需求 (REMOVED Requirements)
+## 5. 详细技术规范 (Technical Details)
+
+### 5.1 数据库设计 (Database)
+为了与 RuoYi 兼容，需新增以下表结构（MySQL）：
+- **`sys_log_alert_rule`**: 告警规则表
+  - `rule_id` (PK), `rule_name`, `expr` (阈值表达式), `duration` (持续时间), `ai_analyze` (是否开启 AI), `tenant_id` (多租户标识), `create_by`, `create_time`
+- **`sys_log_alert_record`**: 告警记录表
+  - `record_id` (PK), `rule_id`, `alert_level`, `alert_message`, `ai_analysis_result` (AI诊断结果文本), `status` (0:未处理, 1:已处理), `create_time`
+
+*注意：实际海量日志数据不存 MySQL，而是存入 ElasticSearch。MySQL 仅存配置和结果。*
+
+### 5.2 API 接口规范 (Backend)
+- **Log Ingestion API**:
+  - `POST /api/logs/ingest`
+  - Body: `{ "serviceName": "app1", "level": "ERROR", "message": "...", "timestamp": 1234567890 }`
+- **Log Query API**:
+  - `GET /api/logs/query?keyword={kw}&level={lvl}&serviceName={svc}&startTime={st}&endTime={et}&pageNum=1&pageSize=10`
+  - 必须经过 `@PreAuthorize` 鉴权，并根据用户所属 `dept_id` 自动追加 ES 过滤条件。
+- **Histogram API**:
+  - `GET /api/logs/histogram?startTime={st}&endTime={et}`
+  - 返回 ECharts 适配的数据结构（如 Date Histogram 聚合）。
+
+### 5.3 前端组件设计 (Frontend Vue3)
+在 RuoYi-Vue3 的 `src/views/monitor` 下增加日志域：
+- **`log/index.vue`**: 日志检索主页。顶层为 `el-form` 高级搜索，主体为 `el-table`，利用 `<template #expand>` 实现日志 JSON 的高亮折叠展示。
+- **`log/dashboard.vue`**: 监控大盘。利用 `echarts` 绘制多折线图（各级别日志时间序列）与饼图（微服务日志量占比）。
+- **`alert/rule.vue`**: `el-crud` 标准页面，管理 `sys_log_alert_rule`。
+- **`alert/record.vue`**: 告警记录查看，针对开启了 AI 诊断的记录，通过 `el-alert` 组件显著高亮展示“AI 修复建议”。
+
+## 6. 移除/替换的原始需求 (REMOVED Requirements)
 
 ### Requirement: HertzBeat 原始 Sureness 认证体系
 **Reason**: 与现有的 RuoYi Spring Security 体系冲突，导致双重认证且无法复用 RuoYi 的用户、角色、部门数据权限。
